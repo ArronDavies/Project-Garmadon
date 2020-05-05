@@ -5,6 +5,8 @@ import flask
 from flask import *
 import sqlite3
 import os
+import bcrypt
+import database
 
 config = configparser.ConfigParser()
 config.read('../config.ini')
@@ -35,7 +37,7 @@ if __name__ == "__main__":
 			dbcmd.close()
 
 			if value is not None:
-				if value['Password'] == data['password']:
+				if bcrypt.checkpw(data['password'].encode('utf-8'), value['Password'].encode('utf-8')):
 					return render_template(r"admin.html")
 				else:
 					return render_template(r"index.html")
@@ -43,6 +45,13 @@ if __name__ == "__main__":
 				return render_template(r"index.html")
 		else:
 			return render_template(r"index.html")
+
+	@app.route('/create_account/<email>/<username>/<password>', methods=['GET'])
+	def create_account(email, username, password):
+		salt = bcrypt.gensalt()
+		hashed = bcrypt.hashpw(password, salt)
+		database.create_account(email, username, hashed)
+		return {}
 
 	@app.route('/get_all_sessions', methods=['GET'])
 	def get_all_sessions():

@@ -16,14 +16,6 @@ def get_account_data_from_username(var):
         return None
 
 
-def create_account(username, password, salt):
-    dbcmd = db.cursor()
-    command = "INSERT INTO Accounts (Username, Password, Salt) VALUES (?, ?, ?)"
-    dbcmd.execute(command, (username, password, salt,))
-    db.commit()
-    dbcmd.close()
-
-
 def get_character_data_from_accountid(var):
     dbcmd = db.cursor()
     query = "SELECT * FROM Characters WHERE AccountID = ?"
@@ -95,3 +87,11 @@ def get_account_data_from_email(var):
         return value
     else:
         return None
+
+
+def create_account(Email, Username, Password):
+    dbcmd = db.cursor()
+    query = "INSERT INTO Accounts (Username, Email, Password) VALUES (?, ?, ?)"
+    dbcmd.execute(query, (Username, Email, Password,))
+    db.commit()
+    dbcmd.close()
