@@ -6,14 +6,10 @@ from flask import *
 import sqlite3
 import os
 import bcrypt
-import database
 
 config = configparser.ConfigParser()
 config.read('../config.ini')
 master_info = config['MASTER']
-
-project_root = os.path.dirname(os.path.dirname(__file__))
-db_path = os.path.join(project_root, 'PikaChewniverse.sqlite')
 
 
 if __name__ == "__main__":
@@ -49,9 +45,23 @@ if __name__ == "__main__":
 	@app.route('/create_account/<email>/<username>/<password>', methods=['GET'])
 	def create_account(email, username, password):
 		salt = bcrypt.gensalt()
-		hashed = bcrypt.hashpw(password, salt)
-		database.create_account(email, username, hashed)
-		return {}
+		hashed = bcrypt.hashpw(password.encode('utf-8'), salt)
+
+		db = sqlite3.connect('../PikaChewniverse.sqlite')
+		db.row_factory = sqlite3.Row
+		dbcmd = db.cursor()
+		query = "SELECT * FROM Accounts WHERE Username = ?"
+		dbcmd.execute(query, (username,))
+		value = dbcmd.fetchone()
+		if value is not None:
+			dbcmd.close()
+			return {'Created': False}
+		else:
+			query = "INSERT INTO Accounts (Username, Email, Password) VALUES (?, ?, ?)"
+			dbcmd.execute(query, (username, email, hashed,))
+			db.commit()
+			dbcmd.close()
+			return {'Created': True}
 
 	@app.route('/get_all_sessions', methods=['GET'])
 	def get_all_sessions():
