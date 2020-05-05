@@ -87,6 +87,10 @@ if __name__ == "__main__":
 	def set_session_data_value_from_connection(valuetochange, newvalue, ip, port):
 		return master_server.set_session_data_value_from_connection(valuetochange=valuetochange, newvalue=newvalue, address=(str(ip), int(port)))
 
+	@app.route('/delete_character_from_connection/<id>/<ip>/<port>', methods=['GET'])
+	def delete_character_from_connection(id, ip, port):
+		return master_server.delete_character_from_connection(charid=id, address=(str(ip), int(port)))
+
 
 	app.run(host=master_info['Bindip'], port=master_info['Port'])
 	loop = asyncio.get_event_loop()

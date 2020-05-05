@@ -66,6 +66,7 @@ def delete_character_from_objectid(var):
     dbcmd = db.cursor()
     query = "DELETE From Characters WHERE ObjectID = ?"
     dbcmd.execute(query, (var,))
+    db.commit()
     dbcmd.close()
 
 

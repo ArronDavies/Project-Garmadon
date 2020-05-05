@@ -52,3 +52,10 @@ class Master:
 			return self.Sessions[uid]
 		else:
 			return {}
+
+	def delete_character_from_connection(self, charid, address):  # pass in tuple (conn.get_address())
+		uid = str(uuid.uuid3(uuid.NAMESPACE_DNS, str(address)))
+		session = self.Sessions[uid]
+		characters = session['Character Data']
+		del characters[charid]
+		return {}

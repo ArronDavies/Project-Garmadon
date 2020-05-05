@@ -6,3 +6,4 @@ from Packets.Outgoing import LOGIN_RESPONSE
 from Packets.Outgoing import LOAD_STATIC_ZONE
 from Packets.Outgoing import CHARACTER_LIST_RESPONSE
 from Packets.Outgoing import CHARACTER_CREATE_RESPONSE
+from Packets.Outgoing import DELETE_CHARACTER_RESPONSE

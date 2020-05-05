@@ -25,6 +25,9 @@ class CharacterServer(Server):
 		self._packets["53-04-00-02"] = Packets.Incoming.CLIENT_CHARACTER_LIST_REQUEST.CLIENT_CHARACTER_LIST_REQUEST
 		self._packets["53-04-00-03"] = Packets.Incoming.CLIENT_CHARACTER_CREATE_REQUEST.CLIENT_CHARACTER_CREATE_REQUEST
 
+
+		self._packets["53-04-00-06"] = Packets.Incoming.CLIENT_CHARACTER_DELETE_REQUEST.CLIENT_CHARACTER_DELETE_REQUEST
+
 		self._connections = {}
 		print("[CHARACTER] Started")
 
@@ -33,7 +36,6 @@ class CharacterServer(Server):
 		address = (str(conn.get_address()[0]), str(conn.get_address()[1]))
 		uid = str(uuid.uuid3(uuid.NAMESPACE_DNS, str(address)))
 		self._connections[uid] = conn
-		create_session(ip=conn.get_address()[0], port=conn.get_address()[1])
 		set_session_data_value_from_connection(valuetochange="RCT", newvalue="4", ip=conn.get_address()[0], port=conn.get_address()[1])
 
 	def _on_lu_packet(self, data: bytes, conn: Connection):

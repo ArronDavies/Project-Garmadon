@@ -34,3 +34,8 @@ def set_character_data_value_from_connection(id, valuetochange, newvalue, ip, po
 def set_session_data_value_from_connection(valuetochange, newvalue, ip, port):
 	x = requests.get(("http://" + master_info['Host'] + ":" + master_info['Port'] + "/set_session_data_value_from_connection/" + str(valuetochange) + "/" + str(newvalue) + "/" + str(ip) + "/" + str(port)))
 	return x.json()
+
+
+def delete_character_from_connection(id, ip, port):
+	x = requests.get(("http://" + master_info['Host'] + ":" + master_info['Port'] + "/delete_character_from_connection/" + str(id) + "/" + str(ip) + "/" + str(port)))
+	return x.text
