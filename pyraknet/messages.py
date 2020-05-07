@@ -3,6 +3,7 @@ from typing import Tuple
 
 Address = Tuple[str, int]
 
+
 class Message(Enum):
 	InternalPing = 0x00
 	Ping = 0x01

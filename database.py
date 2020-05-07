@@ -53,6 +53,14 @@ def get_character_data_from_objid(var):
     dbcmd.close()
     return value
 
+def get_character_data_from_id(var):
+    dbcmd = db.cursor()
+    query = "SELECT * FROM Characters WHERE CharID = ?"
+    dbcmd.execute(query, (var,))
+    value = dbcmd.fetchone()
+    dbcmd.close()
+    return value
+
 
 def set_account_currentcharacter_from_id(characterid, accountid):
     dbcmd = db.cursor()

@@ -1,10 +1,11 @@
 import uuid
 import json
-
+import flask
 
 class Master:
 	def __init__(self):
 		self.Sessions = {}
+		self.Zones = {}
 
 	def create_session(self, address):
 		uid = str(uuid.uuid3(uuid.NAMESPACE_DNS, str(address)))
@@ -59,3 +60,50 @@ class Master:
 		characters = session['Character Data']
 		del characters[charid]
 		return {}
+
+	def get_all_zones(self):
+		return self.Zones
+
+	def get_zone(self, zone_id):
+		if zone_id in self.Zones:
+			return self.Zones[zone_id]
+		else:
+			return {}
+
+	def create_zone_instance(self, zone_id, address):
+		zone_uuid = str(uuid.uuid3(uuid.NAMESPACE_DNS, str(address)))
+
+		if zone_id in self.Zones:
+			zone = self.Zones[zone_id]
+			if zone_uuid in zone:
+				return zone[zone_uuid]
+			else:
+				zone[zone_uuid] = {'IP': address[0], 'Port': address[1], 'Sessions': [], 'Players': 0}
+				return zone[zone_uuid]
+		else:
+			self.Zones[zone_id] = {zone_uuid: {'IP': address[0], 'Port': address[1], 'Sessions': [], 'Players': 0}}
+			return self.Zones[zone_id]
+
+	def add_session_to_instance(self, zone_id, instance_uuid, session_uuid):
+		if zone_id in self.Zones:
+			if instance_uuid in self.Zones[zone_id]:
+				if session_uuid in self.Zones[zone_id][instance_uuid]['Sessions']:
+					return self.Zones[zone_id][instance_uuid]['Sessions']
+				else:
+					self.Zones[zone_id][instance_uuid]['Sessions'].append(session_uuid)
+					return self.Zones[zone_id][instance_uuid]['Sessions']
+			else:
+				return {}
+		else:
+			return {}
+
+	def set_zone_instance_value(self, zone_id, instance_uuid, valuetochange, newvalue):
+		if zone_id in self.Zones:
+			if instance_uuid in self.Zones[zone_id]:
+				self.Zones[zone_id][instance_uuid][valuetochange] = newvalue
+				return self.Zones[zone_id][instance_uuid]
+			else:
+				return {}
+		else:
+			return {}
+

@@ -10,4 +10,4 @@ def DISCONNECT_NOTIFY(conn, disconnect_id):
 
 	response.write(c_ulong(disconnect_id))
 
-	conn.send(response, reliability=Reliability.Reliable)
+	conn.send(response, reliability=Reliability.Unreliable)

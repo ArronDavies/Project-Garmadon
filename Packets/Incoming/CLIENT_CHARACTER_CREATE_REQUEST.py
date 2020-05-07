@@ -38,7 +38,9 @@ def CLIENT_CHARACTER_CREATE_REQUEST(stream, conn):
 		create_character(session['Account ID'], objectid, minifigure_name, unaprovedname, shirt_color, shirt_style, pants_color, hair_style, hair_color, left_hand, right_hand, eyebrows, eyes, mouth)
 
 		chardata = get_character_data_from_objid(objectid)
-		set_session_data_value_from_connection(valuetochange="Current Character ID", newvalue=chardata['CharID'], ip=conn.get_address()[0], port=conn.get_address()[1])
+		set_character_data_value_from_connection(id=chardata['CharID'], valuetochange="Object ID", newvalue=objectid, ip=conn.get_address()[0], port=conn.get_address()[1])
+
+		#set_session_data_value_from_connection(valuetochange="Current Character ID", newvalue=chardata['CharID'], ip=conn.get_address()[0], port=conn.get_address()[1])
 		CHARACTER_CREATE_RESPONSE.CHARACTER_CREATE_RESPONSE(stream, conn, 0x00)  # Succesfull
 		CHARACTER_LIST_RESPONSE.CHARACTER_LIST_RESPONSE(stream, conn)
 

@@ -24,7 +24,7 @@ if __name__ == "__main__":
 		if request.method == 'POST':
 			data = request.form
 
-			db = sqlite3.connect(db_path)
+			db = sqlite3.connect('../PikaChewniverse.sqlite')
 			db.row_factory = sqlite3.Row
 			dbcmd = db.cursor()
 			query = "SELECT * FROM Accounts WHERE Email = ?"
@@ -90,6 +90,26 @@ if __name__ == "__main__":
 	@app.route('/delete_character_from_connection/<id>/<ip>/<port>', methods=['GET'])
 	def delete_character_from_connection(id, ip, port):
 		return master_server.delete_character_from_connection(charid=id, address=(str(ip), int(port)))
+
+	@app.route('/get_all_zones', methods=['GET'])
+	def get_all_zones():
+		return master_server.get_all_zones()
+
+	@app.route('/get_zone/<zone_id>', methods=['GET'])
+	def get_zone(zone_id):
+		return master_server.get_zone(zone_id)
+
+	@app.route('/create_zone_instance/<zone_id>/<ip>/<port>', methods=['GET'])
+	def create_zone_instance(zone_id, ip, port):
+		return master_server.create_zone_instance(zone_id=zone_id, address=(str(ip), int(port)))
+
+	@app.route('/add_session_to_instance/<zone_id>/<instance_uuid>/<session_uuid>', methods=['GET'])
+	def add_session_to_instance(zone_id, instance_uuid, session_uuid):
+		return master_server.add_session_to_instance(zone_id=zone_id, instance_uuid=instance_uuid, session_uuid=session_uuid)
+
+	@app.route('/set_zone_instance_value/<zone_id>/<instance_uuid>/<valuetochange>/<newvalue>', methods=['GET'])
+	def set_zone_instance_value(zone_id, instance_uuid, valuetochange, newvalue):
+		return master_server.set_zone_instance_value(zone_id=zone_id, instance_uuid=instance_uuid, valuetochange=valuetochange, newvalue=newvalue)
 
 
 	app.run(host=master_info['Bindip'], port=master_info['Port'])

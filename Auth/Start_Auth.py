@@ -20,7 +20,7 @@ def flask_thread():
     cli.show_server_banner = lambda *x: None
 
     @app.route('/kick_player/<UUID>', methods=['GET'])
-    def kick_player(self, UUID):
+    def kick_player(UUID):
         auth.kick_player(UUID=UUID)
 
     app.run(host=auth_info['Bindip'], port=auth_info['APIPort'])
