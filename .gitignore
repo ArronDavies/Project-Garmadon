@@ -1,0 +1,6 @@
+venv/
+.idea/
+config.ini
+server.log
+*.pyc
+__pycache__/
