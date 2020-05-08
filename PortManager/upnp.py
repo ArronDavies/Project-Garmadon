@@ -8,6 +8,10 @@ zone_info = config['ZONE']
 auth_info = config['AUTH']
 char_info = config['CHARACTER']
 master_info = config['MASTER']
+handling_info = config['PORT_HANDLING']
+
+if handling_info['UPNP'] == "False":
+    exit()
 
 try:
     localip = socket.gethostbyname(socket.gethostname())
