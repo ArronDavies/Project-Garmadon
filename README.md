@@ -11,5 +11,7 @@ This project is very much still in development and there is no working parts fro
 - [x] Auth Server
 - [x] API and Master Server for session management
 - [x] Front end for API
-- [ ] World Server 
+- [x] World Server 
 - [x] Character Server
+- [ ] Object Loading
+- [ ] UPNP for ease of use
