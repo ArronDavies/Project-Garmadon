@@ -44,7 +44,7 @@ def LOGIN_RESPONSE(stream, conn, username, password):
 	response.write(c_ushort(64))
 	response.write(key, allocated_length=33)
 
-	response.write(bytes(char_server_details['Host'], 'latin1'), allocated_length=33)  # Char IP  TODO: Read this from a config file
+	response.write(bytes(char_server_details['Host'], 'latin1'), allocated_length=33)  # Char IP
 	response.write(bytes(chat_server_details['Host'], 'latin1'), allocated_length=33)  # Chat IP
 	response.write(c_ushort(int(char_server_details['Port'])))  # char Port
 	response.write(c_ushort(int(chat_server_details['Port'])))  # chat port
