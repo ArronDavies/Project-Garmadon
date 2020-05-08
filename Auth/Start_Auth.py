@@ -4,6 +4,9 @@ import asyncio
 import flask
 import threading
 import sys
+import logging
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
 
 config = configparser.ConfigParser()
 config.read('../config.ini')

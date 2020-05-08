@@ -6,6 +6,9 @@ from flask import *
 import sqlite3
 import os
 import bcrypt
+import logging
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
 
 config = configparser.ConfigParser()
 config.read('../config.ini')
@@ -13,14 +16,17 @@ master_info = config['MASTER']
 
 
 if __name__ == "__main__":
+	print("Flask Server hosted on http://{0}:{1}".format(master_info['Bindip'], master_info['Port']))
 	master_server = MasterServer.Master()
 	app = flask.Flask(__name__)
 	app.static_folder = 'static'
 	app.config["DEBUG"] = True
 
 
+
 	@app.route('/', methods=['GET', 'POST'])
 	def index():
+		# print("Login Page Accessed")
 		if request.method == 'POST':
 			data = request.form
 
@@ -35,6 +41,7 @@ if __name__ == "__main__":
 			if value is not None:
 				if bcrypt.checkpw(data['password'].encode('utf-8'), value['Password'].encode('utf-8')):
 					return render_template(r"admin.html")
+					# print("Admin Panel Accessed")
 				else:
 					return render_template(r"index.html")
 			else:
@@ -62,22 +69,27 @@ if __name__ == "__main__":
 			db.commit()
 			dbcmd.close()
 			return {'Created': True}
+			# print("Account Created with the username" + username)
 
 	@app.route('/get_all_sessions', methods=['GET'])
 	def get_all_sessions():
 		return master_server.get_all_sessions()
+		# print("Sessions collected")
 
 	@app.route('/get_session_from_connection/<ip>/<port>', methods=['GET'])
 	def get_session_from_connection(ip, port):
 		return master_server.get_session_from_connection((str(ip), int(port)))
+		# print("Session from connection grabbed")
 
 	@app.route('/delete_session_from_connection/<ip>/<port>', methods=['GET'])
 	def delete_session_from_connection(ip, port):
 		return master_server.get_session_from_connection((str(ip), int(port)))
+		# print("Session deleted from connection")
 
 	@app.route('/create_session/<ip>/<port>', methods=['GET'])
 	def create_session(ip, port):
 		return master_server.create_session(address=(str(ip), int(port)))
+		# print("Session created from connection")
 
 	@app.route('/set_character_data_value_from_connection/<id>/<valuetochange>/<newvalue>/<ip>/<port>', methods=['GET'])
 	def set_character_data_value_from_connection(id, valuetochange, newvalue, ip, port):
@@ -102,6 +114,8 @@ if __name__ == "__main__":
 	@app.route('/create_zone_instance/<zone_id>/<ip>/<port>', methods=['GET'])
 	def create_zone_instance(zone_id, ip, port):
 		return master_server.create_zone_instance(zone_id=zone_id, address=(str(ip), int(port)))
+		# print("New zone (with ID " + zone_id + ") on port " + int(port) )
+
 
 	@app.route('/add_session_to_instance/<zone_id>/<instance_uuid>/<session_uuid>', methods=['GET'])
 	def add_session_to_instance(zone_id, instance_uuid, session_uuid):

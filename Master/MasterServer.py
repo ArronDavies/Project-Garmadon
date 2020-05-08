@@ -1,6 +1,7 @@
 import uuid
 import json
 import flask
+import upnpy
 
 class Master:
 	def __init__(self):
@@ -83,6 +84,26 @@ class Master:
 		else:
 			self.Zones[zone_id] = {zone_uuid: {'IP': address[0], 'Port': address[1], 'Sessions': [], 'Players': 0}}
 			return self.Zones[zone_id]
+
+		upnp = upnpy.UPnP()
+		try:
+			device = upnp.get_igd()
+			device.get_services()
+			service = device['WANPPPConnection.1']
+			service.get_actions()
+			service.AddPortMapping.get_input_arguments()
+			service.AddPortMapping(
+				NewRemoteHost='',
+				NewExternalPort=address[1],
+				NewProtocol='TCP',
+				NewInternalPort=address[1],
+				NewInternalClient=address[0],
+				NewEnabled=1,
+				NewPortMappingDescription='PikaChewniverse Zone Server',
+				NewLeaseDuration=0
+			)
+		except upnpy.exceptions.IGDError:
+			print("No UPNP available device found")
 
 	def add_session_to_instance(self, zone_id, instance_uuid, session_uuid):
 		if zone_id in self.Zones:
