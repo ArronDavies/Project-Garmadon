@@ -8,7 +8,7 @@ import bcrypt
 config = configparser.ConfigParser()
 config.read('config.ini')
 char_server_details = config['CHARACTER']
-
+debug_details = config['DEBUG']
 
 def LOGIN_RESPONSE(stream, conn, server):
 	address = (str(conn.get_address()[0]), int(conn.get_address()[1]))
@@ -16,15 +16,20 @@ def LOGIN_RESPONSE(stream, conn, server):
 	session = server.get_session(uid)
 	session.sync_account_values_down()
 
+
 	if session.username is not None:  # Username exists
-		if bcrypt.checkpw(session.temp_password.encode('utf-8'), session.password.encode('utf-8')):  # Password is correct
-			if session.is_banned == 0:  # Not banned
-				returncode = 0x01  # Success
-				session.set_session_key(str(uuid4())[0:20])
-			else:
-				returncode = 0x02  # Account is banned
+		if debug_details['NoPassword'] == "True":
+			returncode = 0x01  # Success
+			session.set_session_key(str(uuid4())[0:20])
 		else:
-			returncode = 0x06  # Invalid Password
+			if bcrypt.checkpw(session.temp_password.encode('utf-8'), session.password.encode('utf-8')):  # Password is correct
+				if session.is_banned == 0:  # Not banned
+					returncode = 0x01  # Success
+					session.set_session_key(str(uuid4())[0:20])
+				else:
+					returncode = 0x02  # Account is banned
+			else:
+				returncode = 0x06  # Invalid Password
 	else:
 		returncode = 0x06  # Invalid Username
 
