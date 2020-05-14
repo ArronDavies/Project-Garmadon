@@ -1,48 +1,59 @@
 from bitstream import *
-from database import *
-from MasterAPI import *
-import linecache
 from Packets.Outgoing import *
-import random
+from Types.LWOOBJID import LWOOBJID
+import linecache
+from uuid import uuid3, uuid4, NAMESPACE_DNS
+from Utils.GetShirtLOT import GetShirtLOT
+from Utils.GetPantsLOT import GetPantsLOT
 
-def CLIENT_CHARACTER_CREATE_REQUEST(stream, conn):
 
-	minifigure_name = stream.read(str, allocated_length=33)  # wstring 66 bytes
+def CLIENT_CHARACTER_CREATE_REQUEST(stream, conn, server):
+	address = (str(conn.get_address()[0]), int(conn.get_address()[1]))
+	uid = str(uuid3(NAMESPACE_DNS, str(address)))
+	session = server.get_session(uid)
+
+	char_dict = {}
+
+	char_dict['Name'] = stream.read(str, allocated_length=33)  # wstring 66 bytes
 	first_name = stream.read(c_ulong)
 	second_name = stream.read(c_ulong)
 	third_name = stream.read(c_ulong)
 	unknown = stream.read(bytes, allocated_length=9)
-	shirt_color = stream.read(c_ulong)
-	shirt_style = stream.read(c_ulong)
-	pants_color = stream.read(c_ulong)
-	hair_style = stream.read(c_ulong)
-	hair_color = stream.read(c_ulong)
-	left_hand = stream.read(c_ulong)
-	right_hand = stream.read(c_ulong)
-	eyebrows = stream.read(c_ulong)
-	eyes = stream.read(c_ulong)
-	mouth = stream.read(c_ulong)
+	char_dict['ShirtColor'] = stream.read(c_ulong)
+	char_dict['ShirtStyle'] = stream.read(c_ulong)
+	char_dict['PantsColor'] = stream.read(c_ulong)
+	char_dict['HairStyle'] = stream.read(c_ulong)
+	char_dict['HairColor'] = stream.read(c_ulong)
+	char_dict['LeftHand'] = stream.read(c_ulong)
+	char_dict['RightHand'] = stream.read(c_ulong)
+	char_dict['Eyebrows'] = stream.read(c_ulong)
+	char_dict['Eyes'] = stream.read(c_ulong)
+	char_dict['Mouth'] = stream.read(c_ulong)
 	unknown2 = stream.read(c_ubyte)
 
-	objectid = random.randint(0, 99999999999)
+	char_dict['ObjectID'] = LWOOBJID().generate(persistent=True, character=True)
 
 	firstname = linecache.getline('clientfiles/minifigname_first.txt', first_name + 1)
 	middlename = linecache.getline('clientfiles/minifigname_middle.txt', second_name + 1)
 	lastname = linecache.getline('clientfiles/minifigname_last.txt', third_name + 1)
-	unaprovedname = firstname.rstrip() + middlename.rstrip() + lastname.rstrip()
+	unapproved_name = firstname.rstrip() + middlename.rstrip() + lastname.rstrip()
+	char_dict['UnapprovedName'] = unapproved_name
+	response = session.create_character(character=char_dict)
 
-	doesnameexist = check_if_minifig_name_exists(minifigure_name)
-	session = get_session_from_connection(conn.get_address()[0], conn.get_address()[1])
+	char = session.current_character
 
-	if doesnameexist is None:  # No character with name exists
-		create_character(session['Account ID'], objectid, minifigure_name, unaprovedname, shirt_color, shirt_style, pants_color, hair_style, hair_color, left_hand, right_hand, eyebrows, eyes, mouth)
+	pantsLot = GetPantsLOT(char_dict['PantsColor'])
+	item_id = LWOOBJID().generate()
+	item = {"ItemID": item_id, "IsEquipped": 1, "IsLinked": 1, "Quantity": 1, "ItemLOT": pantsLot, "Type": 0}
+	char.inventory.add_item(item)
 
-		chardata = get_character_data_from_objid(objectid)
-		set_character_data_value_from_connection(id=chardata['CharID'], valuetochange="Object ID", newvalue=objectid, ip=conn.get_address()[0], port=conn.get_address()[1])
+	shirtLot = GetShirtLOT(Color=char_dict['ShirtColor'], Style=char_dict['ShirtStyle'])
+	item_id = LWOOBJID().generate()
+	item2 = {"ItemID": item_id, "IsEquipped": 1, "IsLinked": 1, "Quantity": 1, "ItemLOT": shirtLot, "Type": 0}
+	char.inventory.add_item(item2)
 
-		#set_session_data_value_from_connection(valuetochange="Current Character ID", newvalue=chardata['CharID'], ip=conn.get_address()[0], port=conn.get_address()[1])
-		CHARACTER_CREATE_RESPONSE.CHARACTER_CREATE_RESPONSE(stream, conn, 0x00)  # Succesfull
-		CHARACTER_LIST_RESPONSE.CHARACTER_LIST_RESPONSE(stream, conn)
-
+	if response == 0x00:  # Note: Successful
+		CHARACTER_CREATE_RESPONSE.CHARACTER_CREATE_RESPONSE(stream, conn, response)
+		CHARACTER_LIST_RESPONSE.CHARACTER_LIST_RESPONSE(stream, conn, server)
 	else:
-		CHARACTER_CREATE_RESPONSE.CHARACTER_CREATE_RESPONSE(stream, conn, 0x04)
+		CHARACTER_CREATE_RESPONSE.CHARACTER_CREATE_RESPONSE(stream, conn, response)

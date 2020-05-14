@@ -1,12 +1,5 @@
 import Packets.Incoming.LOGIN_REQUEST
 import Packets.Incoming.VERSION_CONFIRM
 import Packets.Incoming.CLIENT_VALIDATION
-
 import Packets.Incoming.CLIENT_CHARACTER_LIST_REQUEST
 import Packets.Incoming.CLIENT_CHARACTER_CREATE_REQUEST
-import Packets.Incoming.CLIENT_CHARACTER_DELETE_REQUEST
-import Packets.Incoming.CLIENT_CHARACTER_RENAME_REQUEST
-
-import Packets.Incoming.CLIENT_LOGIN_REQUEST
-
-import Packets.Incoming.CLIENT_LEVEL_LOAD_COMPLETE

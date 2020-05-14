@@ -1,26 +1,30 @@
+from uuid import uuid3, uuid4, NAMESPACE_DNS
 import Packets.Outgoing
 from bitstream import *
+import configparser
 import uuid
-from MasterAPI import *
 
 config = configparser.ConfigParser()
-config.read('../config.ini')
+config.read('config.ini')
 char_info = config['CHARACTER']
 
 
-def CLIENT_VALIDATION(stream, conn):
+def CLIENT_VALIDATION(stream, conn, server):
 	username = stream.read(str, allocated_length=33)
 	user_key = stream.read(str, allocated_length=33)
 	somehashedstring = stream.read(bytes, 32)
 	unknown1 = stream.read(bytes, 1)
-	session = get_session_from_connection(ip=conn.get_address()[0], port=conn.get_address()[1])
 
-	if user_key == session['User Key']:
-		if str(session['First Validate Done']) == "False":
-			set_session_data_value_from_connection("First Validate Done", True, conn.get_address()[0], conn.get_address()[1])
-		elif str(session['First Validate Done']) == "True":
-			Packets.Outgoing.LOAD_STATIC_ZONE.LOAD_STATIC_ZONE(stream, conn)
+	address = (str(conn.get_address()[0]), int(conn.get_address()[1]))
+	uid = str(uuid3(NAMESPACE_DNS, str(address)))
+	session = server.get_session(uid)
+	session.temp_username = username
+	session.sync_account_values_down()
+
+	if user_key == session.session_key:
+		if session.first_validate is True:
+			pass
+			# Packets.Outgoing.LOAD_STATIC_ZONE.LOAD_STATIC_ZONE(stream, conn)
 	else:
-		address = (str(conn.get_address()[0]), int(conn.get_address()[1]))
-		uid = str(uuid.uuid3(uuid.NAMESPACE_DNS, str(address)))
-		kick_player(char_info['Host'], char_info['Port'], uid)
+		pass
+		# TODO: Kick Player

@@ -46,7 +46,7 @@ class Message(Enum):
 	ReplicaManagerScopeChange = 0x26
 	ReplicaManagerSerialize = 0x27
 	ReplicaManagerDownloadStarted = 0x28
-	ReplicaManagerDownloadComplete = 0x29
+	ReplicaManagerDownloadCompleete = 0x29
 	ConnectionGraphRequest = 0x2a
 	ConnectionGraphReply = 0x2b
 	ConnectionGraphUpdate = 0x2c
