@@ -106,7 +106,7 @@ class ReplicaManager:
 		for conn in self._participants:
 			conn.send(out)
 
-	def destruct(self, obj: Replica) -> None:
+	def destruct(self, obj: Replica, reliability = None) -> None:
 		"""
 		Send a destruction message to participants.
 
@@ -121,7 +121,10 @@ class ReplicaManager:
 
 		out = bytes(out)
 		for conn in self._participants:
-			conn.send(out)
+			if reliability is not None:
+				conn.send(out, reliability=reliability)
+			else:
+				conn.send(out)
 
 		del self._network_ids[obj]
 

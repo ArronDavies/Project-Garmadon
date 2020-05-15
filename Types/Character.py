@@ -2,6 +2,8 @@ from Types.Inventory import Inventory
 from Types.Player import Player
 from Types.Vector3 import Vector3
 from Types.Vector4 import Vector4
+import sqlite3
+from Utils.GetProjectRoot import get_project_root
 
 
 class Character:
@@ -35,6 +37,10 @@ class Character:
 		self.gm_level = None
 		self.reputation = None
 
+		self.x_pos = 0
+		self.y_pos = 0
+		self.z_pos = 0
+
 		self.stats = None
 
 		self.player_object = None
@@ -57,7 +63,7 @@ class Character:
 		self.controllable_physics_dict['RunSpeedMultiplier'] = 0
 		self.controllable_physics_dict['GravityMultiplier'] = 0
 		self.controllable_physics_dict['IsPlayer'] = True
-		self.controllable_physics_dict['PlayerPos'] = Vector3(-40.0, 293.047, -16.0)
+		self.controllable_physics_dict['PlayerPos'] = Vector3(self.x_pos, self.y_pos, self.z_pos)
 		self.controllable_physics_dict['PlayerRot'] = Vector4(0, 0, 0, 0)
 		self.controllable_physics_dict['IsOnGround'] = True
 		self.controllable_physics_dict['IsOnRail'] = False
@@ -137,3 +143,27 @@ class Character:
 		self.other_data_dict['Name'] = self.name
 
 		self.player_object = Player(self.controllable_physics_dict, self.destructible_dict, self.stats_dict, self.character_dict, self.inventory_dict, self.skill_dict, self.render_dict, self.component107_dict, self.other_data_dict)
+
+	def set_last_zone(self, zone_id):
+		self.last_zone = zone_id
+
+		db = sqlite3.connect(str(get_project_root()) + "/PikaChewniverse.sqlite")
+		db.row_factory = sqlite3.Row
+		dbcmd = db.cursor()
+		query = "UPDATE Characters SET LastZone = ? WHERE CharID = ?"
+		dbcmd.execute(query, (zone_id, self.id,))
+		db.commit()
+		dbcmd.close()
+
+	def set_position(self, position):
+		self.x_pos = position.x
+		self.y_pos = position.y
+		self.z_pos = position.z
+
+		db = sqlite3.connect(str(get_project_root()) + "/PikaChewniverse.sqlite")
+		db.row_factory = sqlite3.Row
+		dbcmd = db.cursor()
+		query = "UPDATE Characters SET X = ?, Y = ?, Z = ? WHERE CharID = ?"
+		dbcmd.execute(query, (self.x_pos, self.y_pos, self.z_pos,self.id,))
+		db.commit()
+		dbcmd.close()

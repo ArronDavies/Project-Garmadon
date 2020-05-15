@@ -36,6 +36,7 @@ def LOAD_STATIC_ZONE(stream, conn, server):
 	response.write(c_float(ZONE_SPAWNPOINTS[int(current_character.last_zone)].x))  # x
 	response.write(c_float(ZONE_SPAWNPOINTS[int(current_character.last_zone)].y))  # y
 	response.write(c_float(ZONE_SPAWNPOINTS[int(current_character.last_zone)].z))  # z
+	session.current_character.set_position(ZONE_SPAWNPOINTS[int(current_character.last_zone)])
 	response.write(c_ulong(0))  # if activity world 4 else 0
 
 	conn.send(response, reliability=Reliability.Reliable)
