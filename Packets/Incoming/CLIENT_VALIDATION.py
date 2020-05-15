@@ -1,8 +1,6 @@
 from uuid import uuid3, uuid4, NAMESPACE_DNS
-import Packets.Outgoing
-from bitstream import *
 import configparser
-import uuid
+import Packets.Outgoing
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -20,11 +18,11 @@ def CLIENT_VALIDATION(stream, conn, server):
 	session = server.get_session(uid)
 	session.temp_username = username
 	session.sync_account_values_down()
+	session.sync_characters_down()
 
 	if user_key == session.session_key:
 		if session.first_validate is True:
-			pass
-			# Packets.Outgoing.LOAD_STATIC_ZONE.LOAD_STATIC_ZONE(stream, conn)
+			Packets.Outgoing.LOAD_STATIC_ZONE.LOAD_STATIC_ZONE(stream, conn, server)
 	else:
 		pass
 		# TODO: Kick Player

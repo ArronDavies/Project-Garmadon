@@ -13,6 +13,7 @@ from .server import Server
 from .transports.abc import Connection, ConnectionEvent
 
 from event_dispatcher import EventDispatcher
+import Logger
 
 log = logging.getLogger(__name__)
 
@@ -49,6 +50,8 @@ class ReplicaManager:
 		self._current_network_id = 0
 
 	def add_participant(self, conn: Connection) -> None:
+		string = " added connection: " + str(conn.get_address()[0])
+		Logger.log(Logger.LOGGINGLEVEL.REPLICADEBUG, string)
 		"""
 		Add a participant to which object updates will be broadcast to.
 		Updates won't automatically be sent to all connected players, just the ones added via this method.

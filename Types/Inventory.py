@@ -40,13 +40,14 @@ class Inventory:
 						newitem.is_linked = item_data['IsLinked']
 						newitem.slot = len(self.items) + 1
 						newitem.item_id = item_data['ItemID']
+						newitem.type = item_data['Type']
 						self.items.append(newitem)
 
 						db = sqlite3.connect(str(str(get_project_root()) + "/PikaChewniverse.sqlite"))
 						db.row_factory = sqlite3.Row
 						dbcmd = db.cursor()
-						query = "INSERT INTO Inventory (CharID, ItemLOT, IsEquipped, IsLinked, Quantity, Slot, ItemID) VALUES (?, ?, ?, ?, ?, ?, ?)"
-						dbcmd.execute(query, (self.character.id, newitem.item_lot, newitem.is_equipped, newitem.is_linked, newitem.quantity, newitem.slot, newitem.item_id,))
+						query = "INSERT INTO Inventory (CharID, ItemLOT, IsEquipped, IsLinked, Quantity, Slot, ItemID, Type) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+						dbcmd.execute(query, (self.character.id, newitem.item_lot, newitem.is_equipped, newitem.is_linked, newitem.quantity, newitem.slot, newitem.item_id, newitem.type,))
 						db.commit()
 						dbcmd.close()
 						break
@@ -58,13 +59,14 @@ class Inventory:
 				newitem.is_linked = item_data['IsLinked']
 				newitem.slot = len(self.items) + 1
 				newitem.item_id = item_data['ItemID']
+				newitem.type = item_data['Type']
 				self.items.append(newitem)
 
 				db = sqlite3.connect(str(str(get_project_root()) + "/PikaChewniverse.sqlite"))
 				db.row_factory = sqlite3.Row
 				dbcmd = db.cursor()
-				query = "INSERT INTO Inventory (CharID, ItemLOT, IsEquipped, IsLinked, Quantity, Slot, ItemID) VALUES (?, ?, ?, ?, ?, ?, ?)"
-				dbcmd.execute(query, (self.character.id, newitem.item_lot, newitem.is_equipped, newitem.is_linked, newitem.quantity, newitem.slot, newitem.item_id,))
+				query = "INSERT INTO Inventory (CharID, ItemLOT, IsEquipped, IsLinked, Quantity, Slot, ItemID, Type) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+				dbcmd.execute(query, (self.character.id, newitem.item_lot, newitem.is_equipped, newitem.is_linked, newitem.quantity, newitem.slot, newitem.item_id, newitem.type,))
 				db.commit()
 				dbcmd.close()
 
@@ -88,6 +90,7 @@ class Inventory:
 			newitem.is_linked = item['IsLinked']
 			newitem.slot = len(self.items) + 1
 			newitem.item_id = item['ItemID']
+			newitem.type = item['Type']
 			self.items.append(newitem)
 
 		dbcmd.close()

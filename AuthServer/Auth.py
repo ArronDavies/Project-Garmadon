@@ -27,9 +27,9 @@ class Auth(Server):
 		log(LOGGINGLEVEL.AUTHDEBUG, (" New Connection from " + conn.get_address()[0] + ":" + str(conn.get_address()[1])))
 
 		session = Session()
-		session._ip = conn.get_address()[0]
-		session._port = conn.get_address()[1]
-		session._connection = conn
+		session.ip = conn.get_address()[0]
+		session.port = conn.get_address()[1]
+		session.connection = conn
 
 		address = (str(conn.get_address()[0]), int(conn.get_address()[1]))
 		uid = str(uuid3(NAMESPACE_DNS, str(address)))

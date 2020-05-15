@@ -1,5 +1,5 @@
-from bitstream import *
 from pyraknet.replicamanager import Replica
+from bitstream import *
 
 
 class BaseData(Replica):

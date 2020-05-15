@@ -1,5 +1,6 @@
 from enum import *
-from DataTypes import *
+from bitstream import *
+from Types.Vector3 import Vector3
 
 
 class ZONE_CHECKSUMS(IntEnum):
@@ -121,4 +122,14 @@ ZONE_SPAWNPOINTS = {
     1250: Vector3(-12.1019106, 212.900024, 191.147964),
     1300: Vector3(0.0, 0.0, 0.0),
     1400: Vector3(-329.90, 247.40, 59.85),
+}
+
+LEGO_DATA_TYPES = {
+    str: 0,
+    c_int32: 1,
+    c_float: 3,
+    c_double: 4,
+    c_uint32: 5,
+    c_bool: 7,
+    c_int64: 8,
 }

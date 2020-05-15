@@ -2,7 +2,6 @@ from uuid import uuid3, uuid4, NAMESPACE_DNS
 from pyraknet.transports.abc import *
 from Packets.Outgoing import *
 from bitstream import *
-from Types.Character import Character
 
 
 def CHARACTER_LIST_RESPONSE(stream, conn, server):

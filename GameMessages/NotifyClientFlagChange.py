@@ -1,5 +1,5 @@
 from bitstream import *
-from Packets import CONSTRUCT_PACKET_HEADER
+from Packets.Outgoing import CONSTRUCT_PACKET_HEADER
 
 
 def NotifyClientFlagChange(objid, message_id, bFlag, iFlagID):

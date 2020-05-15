@@ -23,6 +23,7 @@ class Session:
 
 		self.first_validate = False
 
+		self.current_character_id = None
 		self.current_character = None
 		self.characters = []
 
@@ -44,6 +45,7 @@ class Session:
 			self.first_login = value['FirstLogin']
 			self.is_banned = value['Banned']
 			self.is_admin = value['Admin']
+			self.current_character_id = value['CurrentCharacterID']
 
 	def set_session_key(self, key):
 		self.session_key = key
@@ -53,6 +55,17 @@ class Session:
 		dbcmd = db.cursor()
 		query = "UPDATE Accounts SET SessionKey = ? WHERE Username = ?"
 		dbcmd.execute(query, (key, self.username,))
+		db.commit()
+		dbcmd.close()
+
+	def set_current_character_id(self, charid):
+		self.current_character_id = charid
+
+		db = sqlite3.connect(str(get_project_root()) + "/PikaChewniverse.sqlite")
+		db.row_factory = sqlite3.Row
+		dbcmd = db.cursor()
+		query = "UPDATE Accounts SET CurrentCharacterID = ? WHERE Username = ?"
+		dbcmd.execute(query, (charid, self.username,))
 		db.commit()
 		dbcmd.close()
 
@@ -69,6 +82,7 @@ class Session:
 		if value is not None:
 			for character in value:
 				char = Character()
+				char.account_id = character['AccountID']
 				char.id = character['CharID']
 				char.object_id = character['ObjectID']
 
@@ -104,6 +118,14 @@ class Session:
 				char.inventory_space = character['InventorySpace']
 				char.u_score = character['UScore']
 				char.gm_level = character['GMLevel']
+				char.reputation = character['Reputation']
+				char.level = character['Level']
+
+				dbcmd = db.cursor()
+				query = "SELECT * FROM Stats WHERE CharID = ?"
+				dbcmd.execute(query, (char.id,))
+				char.stats = dbcmd.fetchone()
+				dbcmd.close()
 
 				char.inventory.sync_inventory_down()
 				self.characters.append(char)
@@ -138,6 +160,12 @@ class Session:
 				for char in self.characters:
 					if char.name == character['Name']:
 						self.current_character = char
+
+						dbcmd = db.cursor()
+						query = "INSERT INTO Stats (CharID) VALUES (?)"
+						dbcmd.execute(query, (char.id,))
+						db.commit()
+						dbcmd.close()
 
 				return 0x00  # Note: Success
 			else:

@@ -1,20 +1,19 @@
 from bitstream import *
 from pyraknet.replicamanager import Replica
-from DataTypes import *
 
 
-class Script(Replica):
-	def __init__(self, script=False):
-		self.script = script
+class Skill(Replica):
+	def __init__(self, skill_dict):
+		self._skill_dict = skill_dict
 
 	def part1(self, stream):
-		stream.write(c_bit(self.script))
+		stream.write(c_bool(False))  # TODO: add a var for this
 
 	def write_construction(self, stream: WriteStream) -> None:
 		self.part1(stream)
 
 	def serialize(self, stream: WriteStream) -> None:
-		raise NotImplementedError
+		pass
 
 	def on_destruction(self) -> None:
 		raise NotImplementedError

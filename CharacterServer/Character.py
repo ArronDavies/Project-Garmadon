@@ -26,9 +26,9 @@ class Character(Server):
 		log(LOGGINGLEVEL.CHARACTERDEBUG, (" New Connection from " + conn.get_address()[0] + ":" + str(conn.get_address()[1])))
 
 		session = Session()
-		session._ip = conn.get_address()[0]
-		session._port = conn.get_address()[1]
-		session._connection = conn
+		session.ip = conn.get_address()[0]
+		session.port = conn.get_address()[1]
+		session.connection = conn
 
 		address = (str(conn.get_address()[0]), int(conn.get_address()[1]))
 		uid = str(uuid3(NAMESPACE_DNS, str(address)))
@@ -49,6 +49,7 @@ class Character(Server):
 		self._packets["53-04-00-01"] = Packets.Incoming.CLIENT_VALIDATION.CLIENT_VALIDATION
 		self._packets["53-04-00-02"] = Packets.Incoming.CLIENT_CHARACTER_LIST_REQUEST.CLIENT_CHARACTER_LIST_REQUEST
 		self._packets["53-04-00-03"] = Packets.Incoming.CLIENT_CHARACTER_CREATE_REQUEST.CLIENT_CHARACTER_CREATE_REQUEST
+		self._packets["53-04-00-04"] = Packets.Incoming.CLIENT_LOGIN_REQUEST.CLIENT_LOGIN_REQUEST
 
 	def get_rct(self):
 		return self._rct

@@ -8,3 +8,4 @@ class Item:
 		self.is_linked = None
 		self.quantity = None
 		self.slot = None
+		self.type = None
