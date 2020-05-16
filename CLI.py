@@ -34,7 +34,7 @@ class CLI:
 			for session in self.world_dict[server]._sessions:
 				if self.world_dict[server]._sessions[session].current_character.name == args[1]:
 					if str(args[2]) in self.world_dict:
-						self.world_dict[server].transfer_world(new_world_id=args[2], session=self.world_dict[server]._sessions[session])
+						self.world_dict[server].transfer_world(args=[1, args[2]], session=self.world_dict[server]._sessions[session])
 						char_exists = True
 					else:
 						char_exists = True
@@ -49,7 +49,7 @@ class CLI:
 			for session in self.world_dict[server]._sessions:
 				if self.world_dict[server]._sessions[session].current_character.name == args[1]:
 					char_exists = True
-					self.world_dict[server].wear_item(item_lot=args[2], session=self.world_dict[server]._sessions[session])
+					self.world_dict[server].wear_item(args=[1, args[2]], session=self.world_dict[server]._sessions[session])
 					break
 				else:
 					char_exists = False

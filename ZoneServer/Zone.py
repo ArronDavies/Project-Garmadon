@@ -2,13 +2,13 @@ import Packets.Incoming
 import Packets.Outgoing
 from uuid import uuid3, NAMESPACE_DNS
 from pyraknet.server import Server
-from pyraknet.replicamanager import Replica, ReplicaManager
+from pyraknet.replicamanager import ReplicaManager
 from Types.Session import Session
 from pyraknet.transports.raknet.connection import *
 from bitstream import *
 from Logger import *
 from Types.LWOOBJID import LWOOBJID
-from GameMessages import *
+from GameMessages.Outgoing import *
 
 
 class Zone(Server):
@@ -85,6 +85,8 @@ class Zone(Server):
 		self._packets["53-04-00-13"] = Packets.Incoming.CLIENT_LEVEL_LOAD_COMPLETE.CLIENT_LEVEL_LOAD_COMPLETE
 		self._packets["53-04-00-15"] = Packets.Incoming.CLIENT_ROUTE_PACKET.CLIENT_ROUTE_PACKET
 		self._packets["53-04-00-16"] = Packets.Incoming.CLIENT_POSITION_UPDATE.CLIENT_POSITION_UPDATE
+		self._packets["53-04-00-19"] = Packets.Incoming.CLIENT_STRING_CHECK.CLIENT_STRING_CHECK
+		self._packets["53-04-00-0e"] = Packets.Incoming.CLIENT_GENERAL_CHAT_MESSAGE.CLIENT_GENERAL_CHAT_MESSAGE
 
 	def _load_mods(self):
 		if self._mods is not None:
@@ -104,21 +106,21 @@ class Zone(Server):
 	def get_rep_man(self):
 		return self._rep_man
 
-	def transfer_world(self, new_world_id, session):
+	def transfer_world(self, session, args):
 		conn = session.connection
-		session.current_character.set_last_zone(new_world_id)
-		Packets.Outgoing.TRANSFER_TO_WORLD.TRANSFER_TO_WORLD(stream=None, conn=conn, server=self, is_transfer=True, zone_id=new_world_id)
+		session.current_character.set_last_zone(args[1])
+		Packets.Outgoing.TRANSFER_TO_WORLD.TRANSFER_TO_WORLD(stream=None, conn=conn, server=self, is_transfer=True, zone_id=args[1])
 
-	def wear_item(self, item_lot, session):
+	def wear_item(self, session, args):
 		conn = session.connection
 		item_id = LWOOBJID().generate()
-		item = {"ItemID": item_id, "IsEquipped": 1, "IsLinked": 1, "Quantity": 1, "ItemLOT": item_lot, "Type": 0}
+		item = {"ItemID": item_id, "IsEquipped": 1, "IsLinked": 1, "Quantity": 1, "ItemLOT": args[1], "Type": 0}
 
 		session.current_character.inventory.add_item(item_data=item)
 
 		self._rep_man.serialize(session.current_character.player_object, reliability=Reliability.Unreliable)
 
-	def fly(self, session):
+	def fly(self, session, filler_argument):
 		conn = session.connection
 
 		flight_mode = session.current_character.player_object.controllable_physics._is_jetpack_in_air

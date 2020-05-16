@@ -2,8 +2,8 @@ from uuid import uuid3, NAMESPACE_DNS
 from pyraknet.transports.abc import *
 from Packets.Outgoing import *
 from bitstream import *
-from GameMessages import *
 from Types.LegoData import LegoData
+from GameMessages.Outgoing import *
 
 
 def CREATE_CHARACTER(stream, conn,server):

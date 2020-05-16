@@ -8,3 +8,5 @@ import Packets.Incoming.CLIENT_LEVEL_LOAD_COMPLETE
 import Packets.Incoming.CLIENT_POSITION_UPDATE
 import Packets.Incoming.CLIENT_ROUTE_PACKET
 import Packets.Incoming.CLIENT_GAME_MSG
+import Packets.Incoming.CLIENT_STRING_CHECK
+import Packets.Incoming.CLIENT_GENERAL_CHAT_MESSAGE

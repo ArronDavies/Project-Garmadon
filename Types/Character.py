@@ -97,7 +97,7 @@ class Character:
 		self.character_dict['IsInGuild'] = False
 		self.character_dict['GuildID'] = 0
 		self.character_dict['GuildName'] = ""
-		self.character_dict['TransitionState'] = 1
+		self.character_dict['TransitionState'] = 0
 		self.character_dict['HairColor'] = self.hair_color
 		self.character_dict['HairStyle'] = self.hair_style
 		self.character_dict['ShirtColor'] = self.shirt_color
