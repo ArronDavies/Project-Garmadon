@@ -1,5 +1,10 @@
 import logging
 import configparser
+import os
+import shutil
+from datetime import datetime
+from pathlib import Path
+
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -22,6 +27,31 @@ def log(logginglevel, message, packet=""):
         logging.debug("" + LOGGINGLEVEL.PACKET + packet + LOGGINGLEVEL.MESSAGE + message)
     else:
         pass
+
+def logmanage():
+    if os.path.exists("Logs"):
+        dir = (str(Path.cwd()) + '\\Logs')
+        if (len([name for name in os.listdir(dir) if os.path.isfile(os.path.join(dir, name))])) > 19:
+            try:
+                shutil.rmtree('Logs')
+                os.mkdir('Logs')
+            except:
+                pass
+        else:
+            pass
+        if os.path.exists("Logs"):
+            pass
+        else:
+            os.chdir("Logs")
+        if os.path.exists("pikachewniverse.log"):
+            now = datetime.now()
+            dt_string = now.strftime("%d-%m-%Y-%H-%M-%S")
+            shutil.move((str(Path.cwd()) + r"\pikachewniverse.log"), (str(Path.cwd()) + "\Logs\\"))
+            os.rename((str(Path.cwd()) + r"\Logs\pikachewniverse.log"),(str(Path.cwd()) + "\Logs\\" + dt_string + ".log"))
+        else:
+            pass
+    else:
+        os.mkdir("Logs")
 
 class LOGGINGLEVEL:
     WARNING = '\u001b[33m[WARNING]'
