@@ -1,3 +1,10 @@
+import logging
+import configparser
+
+config = configparser.ConfigParser()
+config.read('config.ini')
+logging_info = config['LOGGING']
+
 def log(logginglevel, message, packet=""):
     debug_mode = True
     debug_levels = [LOGGINGLEVEL.DEBUG, LOGGINGLEVEL.AUTHDEBUG, LOGGINGLEVEL.WORLDDEBUG, LOGGINGLEVEL.WORLDDEBUGROUTE, LOGGINGLEVEL.REPLICADEBUG, LOGGINGLEVEL.CHARACTERDEBUG, LOGGINGLEVEL.GAMEMESSAGE]
@@ -9,7 +16,12 @@ def log(logginglevel, message, packet=""):
             print(u"" + logginglevel + LOGGINGLEVEL.PACKET + packet + LOGGINGLEVEL.MESSAGE + message)
     else:
         print(u"" + logginglevel + LOGGINGLEVEL.PACKET + packet + LOGGINGLEVEL.MESSAGE + message)
-
+    
+    if logging_info['LogOutput'] == "True":
+        logging.basicConfig(level=logging.INFO, filename='pikachewniverse.log')
+        logging.debug("" + LOGGINGLEVEL.PACKET + packet + LOGGINGLEVEL.MESSAGE + message)
+    else:
+        pass
 
 class LOGGINGLEVEL:
     WARNING = '\u001b[33m[WARNING]'
