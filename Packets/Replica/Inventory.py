@@ -17,48 +17,21 @@ class Inventory(Replica):
 				count = count + 1
 				items.append(item)
 
-			for item in self._inventory.vault_items:
-				count = count + 1
-				items.append(item)
-			for item in self._inventory.bricks:
-				count = count + 1
-				items.append(item)
-			for item in self._inventory.temporary_items:
-				count = count + 1
-				items.append(item)
-			for item in self._inventory.models:
-				count = count + 1
-				items.append(item)
-			for item in self._inventory.temporary_models:
-				count = count + 1
-				items.append(item)
-			for item in self._inventory.behaviours:
-				count = count + 1
-				items.append(item)
-			for item in self._inventory.property_deeds:
-				count = count + 1
-				items.append(item)
-			for item in self._inventory.hidden:
-				count = count + 1
-				items.append(item)
-			for item in self._inventory.vault_models:
-				count = count + 1
-				items.append(item)
-
 			stream.write(c_ulong(count))  # Note: Number of items Equipped
 
 			for item in items:
-				stream.write(c_longlong(item.item_id))
-				stream.write(c_long(item.item_lot))
-				stream.write(c_bit(False))
-				stream.write(c_bit(True))
-				stream.write(c_ulong(item.quantity))
-				stream.write(c_bit(True))
-				stream.write(c_ushort(item.slot))
-				stream.write(c_bit(True))
-				stream.write(c_ulong(item.type))
-				stream.write(c_bit(False))
-				stream.write(c_bit(True))
+				if item.is_equipped:
+					stream.write(c_longlong(item.item_id))
+					stream.write(c_long(item.item_lot))
+					stream.write(c_bit(False))
+					stream.write(c_bit(True))
+					stream.write(c_ulong(item.quantity))
+					stream.write(c_bit(True))
+					stream.write(c_ushort(item.slot))
+					stream.write(c_bit(True))
+					stream.write(c_ulong(item.type))
+					stream.write(c_bit(False))
+					stream.write(c_bit(True))
 
 		stream.write(c_bit(False))
 

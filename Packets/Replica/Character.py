@@ -125,12 +125,12 @@ class Character(Replica):
 		stream.write(c_ulonglong(self._first_place_wins))
 
 		if self._transition_state == 1:
-			stream.write(c_bit(True))
 			stream.write(c_bit(False))
+			stream.write(c_bit(True))
 			stream.write(self._rocket_modules, length_type=c_uint16)
 		elif self._transition_state == 2:
-			stream.write(c_bit(False))
 			stream.write(c_bit(True))
+			stream.write(c_bit(False))
 		else:
 			stream.write(c_bit(False))
 			stream.write(c_bit(False))

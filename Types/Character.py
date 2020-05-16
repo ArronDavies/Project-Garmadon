@@ -92,12 +92,12 @@ class Character:
 		self.character_dict['HasLevel'] = True
 		self.character_dict['Level'] = self.level
 		self.character_dict['AccountID'] = self.account_id
-		self.character_dict['RocketModules'] = []
+		self.character_dict['RocketModules'] = '1:9746;1:9747;1:9748'
 		self.character_dict['CurrentActivity'] = 0
 		self.character_dict['IsInGuild'] = False
 		self.character_dict['GuildID'] = 0
 		self.character_dict['GuildName'] = ""
-		self.character_dict['TransitionState'] = 0
+		self.character_dict['TransitionState'] = 1
 		self.character_dict['HairColor'] = self.hair_color
 		self.character_dict['HairStyle'] = self.hair_style
 		self.character_dict['ShirtColor'] = self.shirt_color

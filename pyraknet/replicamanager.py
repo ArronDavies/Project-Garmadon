@@ -90,7 +90,7 @@ class ReplicaManager:
 		for conn in recipients:
 			conn.send(out)
 
-	def serialize(self, obj: Replica) -> None:
+	def serialize(self, obj: Replica, reliability = None) -> None:
 		"""
 		Send a serialization message to participants.
 
@@ -104,7 +104,10 @@ class ReplicaManager:
 
 		out = bytes(out)
 		for conn in self._participants:
-			conn.send(out)
+			if reliability is not None:
+				conn.send(out, reliability=reliability)
+			else:
+				conn.send(out)
 
 	def destruct(self, obj: Replica, reliability = None) -> None:
 		"""

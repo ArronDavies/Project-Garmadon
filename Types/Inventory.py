@@ -18,10 +18,12 @@ class Inventory:
 		self.vault_models = []
 
 	def add_item(self, item_data):
+		self.sync_inventory_down()
 		if item_data['Type'] == 0:
 			if len(self.items) > 0:
 				for item in self.items:
 					if int(item.item_lot) == int(item_data['ItemLOT']):
+						print("Same")
 						item.quantity = item.quantity + item_data['Quantity']
 
 						db = sqlite3.connect(str(str(get_project_root()) + "/PikaChewniverse.sqlite"))
@@ -31,6 +33,7 @@ class Inventory:
 						dbcmd.execute(query, (item.quantity, item.item_id,))
 						db.commit()
 						dbcmd.close()
+						break
 
 					elif len(self.items) < self.character.inventory_space:
 						newitem = Item()
@@ -73,6 +76,7 @@ class Inventory:
 				del newitem
 		else:
 			print("Type not supported: " + str(item_data['Type']))
+		self.sync_inventory_down()
 
 	def sync_inventory_down(self):
 		db = sqlite3.connect(str(str(get_project_root()) + "/PikaChewniverse.sqlite"))

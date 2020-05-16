@@ -21,7 +21,6 @@ def TRANSFER_TO_WORLD(stream, conn, server, is_transfer=False, zone_id=0):
 		response.write(c_ushort(int(world_server_details['Port'])))  # Note: Port of world server
 		response.write(c_bool(1))  # Note: If true will say dimension shift success
 		conn.send(response, reliability=Reliability.Unreliable)
-		del server._sessions[uid]
 	else:
 		objectid = stream.read(c_longlong)
 
@@ -43,4 +42,3 @@ def TRANSFER_TO_WORLD(stream, conn, server, is_transfer=False, zone_id=0):
 		response.write(c_ushort(int(world_server_details['Port'])))  # Note: Port of world server
 		response.write(c_bool(0))  # Note: If true will say dimension shift success
 		conn.send(response, reliability=Reliability.Reliable)
-		del server._sessions[uid]

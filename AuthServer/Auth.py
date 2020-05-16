@@ -1,5 +1,5 @@
 import Packets.Incoming
-
+from pyraknet.transports.raknet.connection import *
 from pyraknet.transports.abc import *
 from uuid import uuid3, NAMESPACE_DNS
 from pyraknet.server import Server
@@ -14,17 +14,17 @@ class Auth(Server):
 		super().__init__(address=(bind_ip, port), max_connections=int(max_connections), incoming_password=incoming_password, ssl=ssl)
 		self._dispatcher.add_listener(Message.NewIncomingConnection, self._on_new_conn)
 		self._dispatcher.add_listener(Message.UserPacket, self._on_lu_packet)
-		self._dispatcher.add_listener(Message.DisconnectionNotification, self._on_connection_lost)
+		self._dispatcher.add_listener(ConnectionEvent.Close, self._on_disconnect)
 
 		self._sessions = {}
 		self._packets = {}
 		self._register_packets()
 		self._rct = 1
 
-		log(LOGGINGLEVEL.AUTHDEBUG, " Server Started")
+		log(LOGGINGLEVEL.AUTH, " Server Started")
 
 	def _on_new_conn(self, data: ReadStream, conn: Connection) -> None:
-		log(LOGGINGLEVEL.AUTHDEBUG, (" New Connection from " + conn.get_address()[0] + ":" + str(conn.get_address()[1])))
+		log(LOGGINGLEVEL.AUTH, (" New Connection from " + conn.get_address()[0] + ":" + str(conn.get_address()[1])))
 
 		session = Session()
 		session.ip = conn.get_address()[0]
@@ -35,8 +35,14 @@ class Auth(Server):
 		uid = str(uuid3(NAMESPACE_DNS, str(address)))
 		self._sessions[uid] = session
 
-	def _on_connection_lost(self, data: ReadStream, conn: Connection) -> None:
-		log(LOGGINGLEVEL.AUTHDEBUG, (" Connection Lost " + conn.get_address()[0] + ":" + str(conn.get_address()[1])))
+	def _on_disconnect(self, address: RaknetConnection) -> None:
+		host, port = address.get_address()
+		log(LOGGINGLEVEL.AUTH, (" Disconnected " + host + ":" + str(port)))
+
+		addressout = (str(host), int(port))
+		uid = str(uuid3(NAMESPACE_DNS, str(addressout)))
+
+		del self._sessions[uid]
 
 	def _on_lu_packet(self, data: bytes, conn: Connection):
 		stream = ReadStream(data); rpid = 0x53; rct = stream.read(c_ushort); pid = stream.read(c_ulong); padding = stream.read(c_ubyte)
