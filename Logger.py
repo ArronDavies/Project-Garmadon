@@ -1,5 +1,5 @@
 def log(logginglevel, message, packet=""):
-    debug_mode = False
+    debug_mode = True
     debug_levels = [LOGGINGLEVEL.DEBUG, LOGGINGLEVEL.AUTHDEBUG, LOGGINGLEVEL.WORLDDEBUG, LOGGINGLEVEL.WORLDDEBUGROUTE, LOGGINGLEVEL.REPLICADEBUG, LOGGINGLEVEL.CHARACTERDEBUG, LOGGINGLEVEL.GAMEMESSAGE]
 
     if debug_mode is False:

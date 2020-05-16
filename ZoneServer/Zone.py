@@ -8,21 +8,26 @@ from pyraknet.transports.raknet.connection import *
 from bitstream import *
 from Logger import *
 from Types.LWOOBJID import LWOOBJID
+from GameMessages import *
 
 
 class Zone(Server):
-	def __init__(self, bind_ip, port, max_connections, incoming_password, ssl, zone_id):
+	def __init__(self, bind_ip, port, max_connections, incoming_password, ssl, zone_id, mods=None):
 		super().__init__(address=(bind_ip, port), max_connections=int(max_connections), incoming_password=incoming_password, ssl=ssl)
+		self.zone_id = str(zone_id)
 		self._dispatcher.add_listener(Message.NewIncomingConnection, self._on_new_conn)
 		self._dispatcher.add_listener(Message.UserPacket, self._on_lu_packet)
 		self._dispatcher.add_listener(ConnectionEvent.Close, self._on_disconnect)
+
+		self._mods = mods
+		self._loaded_mods = None
+		self._load_mods()
 
 		self._sessions = {}
 		self._packets = {}
 		self._register_packets()
 		self._rct = 4
 		self._rep_man = ReplicaManager(dispatcher=self._dispatcher)
-		self.zone_id = str(zone_id)
 
 		log(LOGGINGLEVEL.WORLD, " [" + self.zone_id + "] Server Started")
 
@@ -81,6 +86,15 @@ class Zone(Server):
 		self._packets["53-04-00-15"] = Packets.Incoming.CLIENT_ROUTE_PACKET.CLIENT_ROUTE_PACKET
 		self._packets["53-04-00-16"] = Packets.Incoming.CLIENT_POSITION_UPDATE.CLIENT_POSITION_UPDATE
 
+	def _load_mods(self):
+		if self._mods is not None:
+			for mod in self._mods:
+				loaded_mod = mod(server=self)
+				for listener in loaded_mod.listeners:
+					self._dispatcher.add_listener(listener[0], listener[1])
+				self._loaded_mods[loaded_mod.name] = loaded_mod
+				log(LOGGINGLEVEL.WORLD, " [" + self.zone_id + "] [" + loaded_mod.name + "] Loaded")
+
 	def get_rct(self):
 		return self._rct
 
@@ -104,4 +118,20 @@ class Zone(Server):
 
 		self._rep_man.serialize(session.current_character.player_object, reliability=Reliability.Unreliable)
 
+	def fly(self, session):
+		conn = session.connection
+
+		flight_mode = session.current_character.player_object.controllable_physics._is_jetpack_in_air
+
+		if flight_mode is False:
+			session.current_character.player_object.controllable_physics._is_jetpack_in_air = True
+			session.current_character.player_object.controllable_physics._jetpack_effect = 0xa7
+			message = SetJetPackMode.SetJetPackMode(objid=session.current_character.object_id, bypass_checks=True, use=True, effect_id=-1)
+		elif flight_mode is True:
+			session.current_character.player_object.controllable_physics._is_jetpack_in_air = False
+			session.current_character.player_object.controllable_physics._jetpack_effect = 0x00
+			message = SetJetPackMode.SetJetPackMode(objid=session.current_character.object_id, bypass_checks=False, use=False, effect_id=-1)
+
+		conn.send(message, reliability=Reliability.Unreliable)
+		self._rep_man.serialize(session.current_character.player_object, reliability=Reliability.Unreliable)
 

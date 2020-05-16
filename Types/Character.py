@@ -1,5 +1,5 @@
 from Types.Inventory import Inventory
-from Types.Player import Player
+from Packets.Replica.Player import Player
 from Types.Vector3 import Vector3
 from Types.Vector4 import Vector4
 import sqlite3

@@ -9,4 +9,4 @@ def CLIENT_GAME_MSG(stream, conn, server):
 	message_id = stream.read(c_ushort)
 	clean_message_id = format(message_id, '04x')
 
-	# log(LOGGINGLEVEL.GAMEMESSAGE, " [" + str(server.zone_id) + "] Unhandled", str(clean_message_id))
+	log(LOGGINGLEVEL.GAMEMESSAGE, " [" + str(server.zone_id) + "] Unhandled", str(clean_message_id))

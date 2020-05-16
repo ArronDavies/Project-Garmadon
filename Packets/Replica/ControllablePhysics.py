@@ -31,7 +31,7 @@ class ControllablePhysics(Replica):
 			stream.write(c_bit(self._is_jetpack_in_air))  # Is jetpack in air
 			stream.write(c_bit(False))  # Unknown
 
-		flag = True  # Unknown flag
+		flag = False  # Unknown flag
 		stream.write(c_bit(flag))
 		if flag:
 			stream.write(c_ulong(0))  # Unknown 1
