@@ -13,14 +13,13 @@ This project is very much still in development and there is no working parts fro
 Python 3.6 - 3.8 and above (https://www.python.org/downloads/)
 
 ## Current known issues 
-
-Zone not loading
+None (Hooray)
 
 ## TODO list
 - [x] Auth Server
 - [x] API and Master Server for session management
 - [ ] Front end for API
-- [ ] World Server 
+- [x] World Server 
 - [x] Character Server
 - [x] Inventory 
 - [ ] UPNP for ease of use
@@ -29,4 +28,4 @@ Zone not loading
 - [ ] Admin Panel
 - [ ] Support for other SQL formats
 - [ ] Auto Updating
-- [ ] Object Loading
+- [x] Object Loading
