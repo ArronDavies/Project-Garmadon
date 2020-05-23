@@ -7,3 +7,6 @@ from Packets.Replica import Inventory
 from Packets.Replica import Skill
 from Packets.Replica import Render
 from Packets.Replica import Component107
+from Packets.Replica import SimplePhysics
+from Packets.Replica import PhantomPhysics
+from Packets.Replica import Vendor

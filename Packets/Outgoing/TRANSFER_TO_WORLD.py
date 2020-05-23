@@ -34,7 +34,10 @@ def TRANSFER_TO_WORLD(stream, conn, server, is_transfer=False, zone_id=0):
 				session.current_character = character
 				break
 
-		world_server_details = config[str(session.current_character.last_zone)]
+		if session.current_character.last_zone == 0:
+			world_server_details = config['1000']
+		else:
+			world_server_details = config[str(session.current_character.last_zone)]
 
 		response = WriteStream()
 		Packets.Outgoing.CONSTRUCT_PACKET_HEADER.CONSTRUCT_PACKET_HEADER(0x53, 0x05, 0x0e, response=response)

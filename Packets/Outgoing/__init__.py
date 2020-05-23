@@ -8,3 +8,4 @@ import Packets.Outgoing.LOAD_STATIC_ZONE
 import Packets.Outgoing.CREATE_CHARACTER
 import Packets.Outgoing.CHAT_MODERATION_STRING
 import Packets.Outgoing.GENERAL_CHAT_MESSAGE
+import Packets.Outgoing.GET_FRIENDS_LIST_RESPONSE

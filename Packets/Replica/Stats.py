@@ -6,23 +6,24 @@ class Stats(Replica):
 	def __init__(self, stats_dict):
 		self._has_stats = stats_dict['HasStats']
 
-		self._health = stats_dict['Health']
-		self._max_health = stats_dict['MaxHealth']
+		if self._has_stats:
+			self._health = stats_dict['Health']
+			self._max_health = stats_dict['MaxHealth']
 
-		self._armor = stats_dict['Armor']
-		self._max_armor = stats_dict['MaxArmor']
+			self._armor = stats_dict['Armor']
+			self._max_armor = stats_dict['MaxArmor']
 
-		self._imagination = stats_dict['Imagination']
-		self._max_imagination = stats_dict['MaxImagination']
+			self._imagination = stats_dict['Imagination']
+			self._max_imagination = stats_dict['MaxImagination']
 
-		self._damage_absorption_points = stats_dict['DamageAbsorptionPoints']
-		self._is_immune = stats_dict['IsImmune']
-		self._is_gm_immune = stats_dict['IsGMImmune']
-		self._is_shielded = stats_dict['IsShielded']
+			self._damage_absorption_points = stats_dict['DamageAbsorptionPoints']
+			self._is_immune = stats_dict['IsImmune']
+			self._is_gm_immune = stats_dict['IsGMImmune']
+			self._is_shielded = stats_dict['IsShielded']
 
-		self._factions = stats_dict['Factions']
+			self._factions = stats_dict['Factions']
 
-		self._is_smashable = stats_dict['IsSmashable']
+			self._is_smashable = stats_dict['IsSmashable']
 
 	def part1(self, stream):
 		flag = True

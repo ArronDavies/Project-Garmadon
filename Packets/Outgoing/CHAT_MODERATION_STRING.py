@@ -1,6 +1,8 @@
-from bitstream import *
 from Packets.Outgoing import *
+from bitstream import *
 from pyraknet.transports.abc import *
+import better_profanity
+
 
 # Note:
 # Note:
@@ -11,11 +13,17 @@ from pyraknet.transports.abc import *
 # Note:
 
 
-def CHAT_MODERATION_STRING(stream, conn, server, request_id):
+def CHAT_MODERATION_STRING(stream, conn, server, request_id, message):
 	response = WriteStream()
 	Packets.Outgoing.CONSTRUCT_PACKET_HEADER.CONSTRUCT_PACKET_HEADER(0x53, 0x05, 0x3b, response=response)
-	response.write(c_ubyte(1))
-	response.write(c_ushort(0))
-	response.write(c_ubyte(request_id))
+
+	if better_profanity.profanity.contains_profanity(str(message, 'latin1')):
+		response.write(c_ubyte(0))
+		response.write(c_ushort(0))
+		response.write(c_ubyte(request_id))
+	else:
+		response.write(c_ubyte(1))
+		response.write(c_ushort(0))
+		response.write(c_ubyte(request_id))
 
 	conn.send(response, reliability=Reliability.Reliable)

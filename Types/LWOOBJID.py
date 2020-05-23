@@ -9,3 +9,9 @@ class LWOOBJID:
 		number = number | (int(spawned) << 58)
 		number = number | (int(character) << 60)
 		return number
+
+	def generateobject(self):
+		return random.randrange(1000000000000000000, 1999999999999999999)
+
+	def generatespawner(self):
+		return random.randrange(70000000000000, 79999999999999)

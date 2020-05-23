@@ -3,7 +3,9 @@ from bitstream import *
 
 
 class BaseData(Replica):
-	def __init__(self, objid, lot, name, time_since_created=0, trigger=False, spawner=None, spawner_node=None, scale=None, components=[]):
+	def __init__(self, objid, lot, name, time_since_created=0, trigger=False, spawner=None, spawner_node=None, scale=None, components=[], important=False):
+		super().__init__()
+		self.important = important
 		self.objid = objid
 		self.lot = lot
 		self.name = name

@@ -9,25 +9,30 @@ from bitstream import *
 from Logger import *
 from Types.LWOOBJID import LWOOBJID
 from GameMessages.Outgoing import *
+from Utils.LUZReader import LUZReader
+from threading import Thread
 
 
 class Zone(Server):
-	def __init__(self, bind_ip, port, max_connections, incoming_password, ssl, zone_id, mods=None):
+	def __init__(self, bind_ip, port, max_connections, incoming_password, ssl, zone_id):
 		super().__init__(address=(bind_ip, port), max_connections=int(max_connections), incoming_password=incoming_password, ssl=ssl)
 		self.zone_id = str(zone_id)
 		self._dispatcher.add_listener(Message.NewIncomingConnection, self._on_new_conn)
 		self._dispatcher.add_listener(Message.UserPacket, self._on_lu_packet)
 		self._dispatcher.add_listener(ConnectionEvent.Close, self._on_disconnect)
 
-		self._mods = mods
-		self._loaded_mods = None
-		self._load_mods()
-
 		self._sessions = {}
 		self._packets = {}
 		self._register_packets()
 		self._rct = 4
 		self._rep_man = ReplicaManager(dispatcher=self._dispatcher)
+
+		self.zone_data = None
+
+		self.spawners = {}
+
+		self.load_objects()
+		self.keep_alive_thread = None
 
 		log(LOGGINGLEVEL.WORLD, " [" + self.zone_id + "] Server Started")
 
@@ -87,15 +92,7 @@ class Zone(Server):
 		self._packets["53-04-00-16"] = Packets.Incoming.CLIENT_POSITION_UPDATE.CLIENT_POSITION_UPDATE
 		self._packets["53-04-00-19"] = Packets.Incoming.CLIENT_STRING_CHECK.CLIENT_STRING_CHECK
 		self._packets["53-04-00-0e"] = Packets.Incoming.CLIENT_GENERAL_CHAT_MESSAGE.CLIENT_GENERAL_CHAT_MESSAGE
-
-	def _load_mods(self):
-		if self._mods is not None:
-			for mod in self._mods:
-				loaded_mod = mod(server=self)
-				for listener in loaded_mod.listeners:
-					self._dispatcher.add_listener(listener[0], listener[1])
-				self._loaded_mods[loaded_mod.name] = loaded_mod
-				log(LOGGINGLEVEL.WORLD, " [" + self.zone_id + "] [" + loaded_mod.name + "] Loaded")
+		self._packets["53-04-00-1e"] = Packets.Incoming.CLIENT_HANDLE_FUNNESS.CLIENT_HANDLE_FUNNESS
 
 	def get_rct(self):
 		return self._rct
@@ -125,6 +122,7 @@ class Zone(Server):
 
 		flight_mode = session.current_character.player_object.controllable_physics._is_jetpack_in_air
 
+		message = None
 		if flight_mode is False:
 			session.current_character.player_object.controllable_physics._is_jetpack_in_air = True
 			session.current_character.player_object.controllable_physics._jetpack_effect = 0xa7
@@ -137,3 +135,30 @@ class Zone(Server):
 		conn.send(message, reliability=Reliability.Unreliable)
 		self._rep_man.serialize(session.current_character.player_object, reliability=Reliability.Unreliable)
 
+	def load_objects(self):
+		luz = LUZReader(zone_id=self.zone_id)
+		luz.parse()
+		self.zone_data = luz.zone
+
+		for scene in luz.zone.scenes:
+			scene.get_spawners()
+
+			for spawner in scene.spawners:
+				spawner.get_components()
+				spawner.parse_settings()
+
+				if spawner.is_constructable:
+					spawner.start(self)
+					self.spawners[spawner.spawner_object_id] = spawner
+				else:
+					pass
+
+	# 	self.keep_alive_thread = Thread(target=self.keep_alive)
+	# 	self.keep_alive_thread.isDaemon = True
+	# 	self.keep_alive_thread.start()
+	#
+	# def keep_alive(self):
+	# 	while True:
+	# 		for spawner in self.spawners:
+	# 			self.spawners[spawner].keep_alive()
+	# 		time.sleep(1)

@@ -3,6 +3,7 @@ from pyraknet.transports.abc import *
 import Packets.Outgoing
 from bitstream import *
 from Enums import *
+from Types.Vector4 import Vector4
 
 def LOAD_STATIC_ZONE(stream, conn, server):
 	address = (str(conn.get_address()[0]), int(conn.get_address()[1]))
@@ -34,10 +35,13 @@ def LOAD_STATIC_ZONE(stream, conn, server):
 	response.write(c_ulong(checksum)) # checksum
 	response.write(c_ushort(0))  # ???
 
-	response.write(c_float(ZONE_SPAWNPOINTS[int(current_character.last_zone)].x))  # x
-	response.write(c_float(ZONE_SPAWNPOINTS[int(current_character.last_zone)].y))  # y
-	response.write(c_float(ZONE_SPAWNPOINTS[int(current_character.last_zone)].z))  # z
-	session.current_character.set_position(ZONE_SPAWNPOINTS[int(current_character.last_zone)])
+	position = Vector3(server.zone_data.spawnpoint_pos_x, server.zone_data.spawnpoint_pos_y, server.zone_data.spawnpoint_pos_z)
+	rotation = Vector4(server.zone_data.spawnpoint_rot_x, server.zone_data.spawnpoint_rot_y, server.zone_data.spawnpoint_rot_z, server.zone_data.spawnpoint_rot_w)
+
+	response.write(c_float(position.x))  # x
+	response.write(c_float(position.y))  # y
+	response.write(c_float(position.z))  # z
+	session.current_character.set_position(position, rotation)
 	response.write(c_ulong(0))  # if activity world 4 else 0
 
 	conn.send(response, reliability=Reliability.Reliable)

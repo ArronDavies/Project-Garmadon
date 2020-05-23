@@ -1,6 +1,7 @@
 from bitstream import *
 from Packets.Outgoing import *
 from uuid import uuid3, uuid4, NAMESPACE_DNS
+import better_profanity
 
 def CLIENT_GENERAL_CHAT_MESSAGE(stream, conn, server):
 	address = (str(conn.get_address()[0]), int(conn.get_address()[1]))
@@ -13,25 +14,29 @@ def CLIENT_GENERAL_CHAT_MESSAGE(stream, conn, server):
 
 	length = stream.read(c_ulong)
 
-	message = stream.read(str, allocated_length=length)
+	message = stream.read(bytes, length=length*2)
 
 	commands = {}
 	commands['!tp'] = server.transfer_world
 	commands['!wear_item'] = server.wear_item
 	commands['!fly'] = server.fly
-
-	args = message.split(' ')  # Note: arg[0] is the command312
-
+	commands['!set_health'] = server.set_health
+	args = message.decode('utf-16le').rstrip(' \t\r\n\0').split(' ')  # Note: arg[0] is the command
+	
 	if args[0].startswith('!'):
 		if args[0] == "!help":
 			GENERAL_CHAT_MESSAGE.GENERAL_CHAT_MESSAGE(stream, conn, server, str("!tp <zone>"), "", 0)
 			GENERAL_CHAT_MESSAGE.GENERAL_CHAT_MESSAGE(stream, conn, server, str("!wear_item <lot>"), "", 0)
 			GENERAL_CHAT_MESSAGE.GENERAL_CHAT_MESSAGE(stream, conn, server, str("!fly"), "", 0)
+			GENERAL_CHAT_MESSAGE.GENERAL_CHAT_MESSAGE(stream, conn, server, str("!set_health <health>"), "", 0)
 		else:
 			try:
 				commands[args[0]](sendersession, args)
 			except KeyError:
 				GENERAL_CHAT_MESSAGE.GENERAL_CHAT_MESSAGE(stream, conn, server, str("That command does not exist"), "", 0)
 	else:
-		for session in server._sessions:
-			Packets.Outgoing.GENERAL_CHAT_MESSAGE.GENERAL_CHAT_MESSAGE(stream, server._sessions[session].connection, server, message=message, sender_name=sendersession.current_character.name, sender_objid=sendersession.current_character.object_id)
+		if better_profanity.profanity.contains_profanity(str(message, 'latin1')):
+			pass
+		else:
+			for session in server._sessions:
+				Packets.Outgoing.GENERAL_CHAT_MESSAGE.GENERAL_CHAT_MESSAGE(stream, server._sessions[session].connection, server, message=message, sender_name=sendersession.current_character.name, sender_objid=sendersession.current_character.object_id)

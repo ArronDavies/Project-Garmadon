@@ -37,17 +37,12 @@ def CREATE_CHARACTER(stream, conn,server):
 	response.write(charldf)
 
 	conn.send(response, reliability=Reliability.ReliableOrdered)
-	replica_manager = server.get_rep_man()
 
-	replica_manager.add_participant(conn=conn)
+	replica_manager = server.get_rep_man()
 
 	session.current_character.create_player_object()
 	player_object = session.current_character.player_object
 
 	replica_manager.construct(player_object, True)
 
-	obj_load = ServerDoneLoadingAllObjects.ServerDoneLoadingAllObjects(objid=int(session.current_character.object_id), message_id=0x66a)
-	conn.send(obj_load, reliability=Reliability.ReliableOrdered)
-
-	player_ready = PlayerReady.PlayerReady(objid=int(session.current_character.object_id), message_id=0x1fd)
-	conn.send(player_ready, reliability=Reliability.ReliableOrdered)
+	replica_manager.add_participant(conn=conn, server=server)

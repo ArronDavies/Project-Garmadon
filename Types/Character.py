@@ -41,7 +41,14 @@ class Character:
 		self.y_pos = 0
 		self.z_pos = 0
 
+		self.x_rot = 0
+		self.y_rot = 0
+		self.z_rot = 0
+		self.w_rot = 0
+
 		self.stats = None
+
+		self.friends = []
 
 		self.player_object = None
 
@@ -64,7 +71,7 @@ class Character:
 		self.controllable_physics_dict['GravityMultiplier'] = 0
 		self.controllable_physics_dict['IsPlayer'] = True
 		self.controllable_physics_dict['PlayerPos'] = Vector3(self.x_pos, self.y_pos, self.z_pos)
-		self.controllable_physics_dict['PlayerRot'] = Vector4(0, 0, 0, 0)
+		self.controllable_physics_dict['PlayerRot'] = Vector4(self.x_rot, self.y_rot, self.z_rot, self.w_rot)
 		self.controllable_physics_dict['IsOnGround'] = True
 		self.controllable_physics_dict['IsOnRail'] = False
 		self.controllable_physics_dict['IsVelocity'] = False
@@ -92,12 +99,12 @@ class Character:
 		self.character_dict['HasLevel'] = True
 		self.character_dict['Level'] = self.level
 		self.character_dict['AccountID'] = self.account_id
-		self.character_dict['RocketModules'] = '1:9746;1:9747;1:9748'
+		self.character_dict['RocketModules'] = '1:14454;1:14452;1:4715;'
 		self.character_dict['CurrentActivity'] = 0
 		self.character_dict['IsInGuild'] = False
 		self.character_dict['GuildID'] = 0
 		self.character_dict['GuildName'] = ""
-		self.character_dict['TransitionState'] = 0
+		self.character_dict['TransitionState'] = 1
 		self.character_dict['HairColor'] = self.hair_color
 		self.character_dict['HairStyle'] = self.hair_style
 		self.character_dict['ShirtColor'] = self.shirt_color
@@ -142,6 +149,8 @@ class Character:
 		self.other_data_dict['ObjectID'] = self.object_id
 		self.other_data_dict['Name'] = self.name
 
+		self.render_dict['Effects'] = 0
+
 		self.player_object = Player(self.controllable_physics_dict, self.destructible_dict, self.stats_dict, self.character_dict, self.inventory_dict, self.skill_dict, self.render_dict, self.component107_dict, self.other_data_dict)
 
 	def set_last_zone(self, zone_id):
@@ -155,10 +164,15 @@ class Character:
 		db.commit()
 		dbcmd.close()
 
-	def set_position(self, position):
+	def set_position(self, position, rotation):
 		self.x_pos = position.x
 		self.y_pos = position.y
 		self.z_pos = position.z
+
+		self.x_rot = rotation.x
+		self.y_rot = rotation.y
+		self.z_rot = rotation.z
+		self.w_rot = rotation.w
 
 		db = sqlite3.connect(str(get_project_root()) + "/PikaChewniverse.sqlite")
 		db.row_factory = sqlite3.Row

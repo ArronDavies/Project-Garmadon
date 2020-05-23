@@ -10,14 +10,18 @@ from bitstream import c_bit, c_ubyte, c_ushort, WriteStream
 
 from .messages import Message
 from .server import Server
-from .transports.abc import Connection, ConnectionEvent
-
+from .transports.abc import *
+from uuid import uuid3, NAMESPACE_DNS
 from event_dispatcher import EventDispatcher
 import Logger
+from GameMessages.Outgoing import *
 
 log = logging.getLogger(__name__)
 
+
 class Replica:
+	def __init__(self):
+		self.important = False
 	"""Abstract base class for replicas (objects serialized using the replica manager system)."""
 
 	def write_construction(self, stream: WriteStream) -> None:
@@ -49,7 +53,7 @@ class ReplicaManager:
 		self._network_ids: Dict[Replica, int] = {}
 		self._current_network_id = 0
 
-	def add_participant(self, conn: Connection) -> None:
+	def add_participant(self, server, conn: Connection) -> None:
 		string = " added connection: " + str(conn.get_address()[0])
 		Logger.log(Logger.LOGGINGLEVEL.REPLICADEBUG, string)
 		"""
@@ -59,19 +63,37 @@ class ReplicaManager:
 		Newly added players will receive construction messages for all objects are currently registered with the manager (construct has been called and destruct hasn't been called yet).
 		"""
 		self._participants.add(conn)
-		for obj in self._network_ids:
-			self._construct(obj, new=False, recipients=[conn])
 
-	def construct(self, obj: Replica, new: bool=True) -> None:
+		important_not_sent = True
+
+		for obj in self._network_ids:
+			if obj.important:
+				self._construct(obj, new=False, recipients=[conn])
+				print("Sent player")
+
+		address = (str(conn.get_address()[0]), int(conn.get_address()[1]))
+		uid = str(uuid3(NAMESPACE_DNS, str(address)))
+		session = server.get_session(uid)
+		obj_load = ServerDoneLoadingAllObjects.ServerDoneLoadingAllObjects(objid=int(session.current_character.object_id), message_id=0x66a)
+		conn.send(obj_load, reliability=Reliability.ReliableOrdered)
+		player_ready = PlayerReady.PlayerReady(objid=int(session.current_character.object_id), message_id=0x1fd)
+		conn.send(player_ready, reliability=Reliability.ReliableOrdered)
+
+		for obj in self._network_ids:
+			if obj.important is not True:
+				self._construct(obj, new=False, recipients=[conn])
+				print("sent object")
+
+	def construct(self, obj: Replica, new: bool=True, important: bool=False) -> None:
 		"""
 		Send a construction message to participants.
 
 		The object is registered and participants joining later will also receive a construction message when they join (if the object hasn't been destructed in the meantime).
 		The actual content of the construction message is determined by the object's write_construction method.
 		"""
-		self._construct(obj, new)
+		self._construct(obj, new, important)
 
-	def _construct(self, obj: Replica, new: bool=True, recipients: Iterable[Connection]=None) -> None:
+	def _construct(self, obj: Replica, new: bool=True, important: bool=False, recipients: Iterable[Connection]=None) -> None:
 		# recipients is needed to send replicas to new participants
 		if recipients is None:
 			recipients = self._participants

@@ -15,6 +15,6 @@ def GENERAL_CHAT_MESSAGE(stream, conn, server, message, sender_name, sender_obji
 	response.write(c_ulonglong(sender_objid))
 	response.write(c_ushort(0))  # Note: Unknown
 	response.write(c_bool(is_mythran))
-	response.write(message, allocated_length=33)
+	response.write(message, allocated_length=66)
 
 	conn.send(response, reliability=Reliability.Reliable)

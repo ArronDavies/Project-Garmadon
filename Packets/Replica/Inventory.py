@@ -14,8 +14,9 @@ class Inventory(Replica):
 			items = []
 			count = 0
 			for item in self._inventory.items:
-				count = count + 1
-				items.append(item)
+				if item.is_equipped:
+					count = count + 1
+					items.append(item)
 
 			stream.write(c_ulong(count))  # Note: Number of items Equipped
 
