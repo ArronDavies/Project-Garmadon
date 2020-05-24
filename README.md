@@ -15,6 +15,9 @@ Python 3.6 - 3.8 and above (https://www.python.org/downloads/)
 ## Current known issues 
 None (Hooray)
 
+##Credits 
+This project uses pyraknet which would normally be downloaded seperately but due to the modifications it is included
+
 ## TODO list
 - [x] Auth Server
 - [x] API and Master Server for session management
