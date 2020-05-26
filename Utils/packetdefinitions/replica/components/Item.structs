@@ -1,9 +1,0 @@
-Component 11 - Item (tested using LOT 16380)
-Index 1 ($+81B2D0):
-[bit] - flag
-	[s64] - ???
-	[u32] - ???
-	[bit] - flag, assert == False
-		not sure about this
-		[u32] - ???
-			[u8] - ???

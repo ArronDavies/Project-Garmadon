@@ -12,6 +12,8 @@ This project is very much still in development and there is no working parts fro
 
 Python 3.6 - 3.8 and above (https://www.python.org/downloads/)
 
+PyPi Packages in the requirements.txt
+
 ## Current known issues 
 None (Hooray)
 
