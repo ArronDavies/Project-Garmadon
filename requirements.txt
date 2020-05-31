@@ -1,5 +1,5 @@
 bcrypt==3.1.7
 requests==2.23.0
-git+git://github.com/lcdr/py_event_dispatcher.git@4e77404
-git+git://github.com/lcdr/bitstream.git@b3389c8
-git+git://github.com/ArronDavies/Pika-Chewniverse-2.0.git@pyraknetmod
+git+git://github.com/lcdr/py_event_dispatcher.git@4e77404#egg=event_dispatcher
+git+git://github.com/lcdr/bitstream.git@b3389c8#egg=bitstream
+git+git://github.com/ArronDavies/Pika-Chewniverse-2.0.git@pyraknetmod#egg=pyraknetmod
