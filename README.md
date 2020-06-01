@@ -17,8 +17,8 @@ PyPi Packages in the requirements.txt
 ## Current known issues 
 None (Hooray)
 
-##Credits 
-This project uses pyraknet which would normally be downloaded seperately but due to the modifications it is included
+## Credits 
+LCDR for his PyRakNet, and any contributer to the LU documentation. 
 
 ## TODO list
 - [x] Auth Server
