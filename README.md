@@ -1,6 +1,7 @@
 # Pika-Chewniverse
 A Lego Universe server written in Pyhton using lcdr's PyRakNet
 This project is not intended for main stream use it is more of a test server that is intended to be reliable.
+GLASS/JASON IS BACK BITCHES
 
 ## Disclaimer
 > The LEGO Group has not endorsed or authorized the operation of this game and is not liable for any safety issues in relation to its operation. And this project has no relation to Nintendo/Creatures Inc/GAME FREAK inc or the Pokemon brand
