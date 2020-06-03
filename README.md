@@ -3,7 +3,7 @@ A Lego Universe server written in Pyhton using lcdr's PyRakNet
 This project is not intended for main stream use it is more of a test server that is intended to be reliable.
 
 ## Disclaimer
-> The LEGO Group has not endorsed or authorized the operation of this game and is not liable for any safety issues in relation to its operation. And this project has no relation to Nintendo/Creatures Inc/GAME FREAK inc or the Pokemon brand
+> The LEGO Group has not endorsed or authorized the operation of this game and is not liable for any safety issues in relation to its operation.
 
 ## About
 This project is very much still in development and there is no working parts from a game play perspective and for those that understand here is a list of what is left to be implemented and what is not implemented and a reference for setup
