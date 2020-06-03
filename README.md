@@ -1,5 +1,4 @@
-# LEGO Universe Newly Imagined Newly Imagined 2.0
-# (LU Ni Ni OwO 2.0)
+# Project Garmadon
 A Lego Universe server written in Pyhton using lcdr's PyRakNet
 This project is not intended for main stream use it is more of a test server that is intended to be reliable.
 
