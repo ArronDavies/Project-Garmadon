@@ -18,13 +18,13 @@ if __name__ == "__main__":
         auth = Auth(bind_ip="0.0.0.0", port=1001, max_connections=32, incoming_password=b"3.25 ND1", ssl=None)
         char = Character(bind_ip="0.0.0.0", port=1002, max_connections=32, incoming_password=b"3.25 ND1", ssl=None)
 
-        zones_to_open = [1000, 1100, 1200, 1300]
+        zones_to_open = [1100]
         for zone in zones_to_open:
             zone_info = config[str(zone)]
             world_dict[zone] = Zone(bind_ip="0.0.0.0", port=int(zone_info['Port']), max_connections=32, incoming_password=b"3.25 ND1", ssl=None, zone_id=str(zone))
 
     except OSError:
-        print("Ports cannot be occupied.")
+        print("Ports are occupied or LUZ cannot be found")
         exit()
 
     cli = threading.Thread(target=CLI, args=(world_dict,))
