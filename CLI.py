@@ -9,7 +9,6 @@ class CLI:
 		self.commands = {}
 		self.commands['/help'] = self.handle_help
 		self.commands['/tp'] = self.handle_tp
-		self.commands['/wear_item'] = self.handle_wear_item
 		self.commands['/fly'] = self.fly
 
 		self.main()
@@ -25,7 +24,6 @@ class CLI:
 
 	def handle_help(self, args):
 		print("/tp <name> <new world id>")
-		print("/wear_item <name> <item lot>")
 		print("/fly <name>")
 
 	def handle_tp(self, args):

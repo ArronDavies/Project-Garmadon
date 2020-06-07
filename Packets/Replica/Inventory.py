@@ -11,31 +11,28 @@ class Inventory(Replica):
 		stream.write(c_bit(self._has_inventory))
 
 		if self._has_inventory:
-			items = []
 			count = 0
-			for item in self._inventory.items:
-				if item.is_equipped:
+			for item in self._inventory:
+				if item['IsEquipped']:
 					count = count + 1
-					items.append(item)
 
 			stream.write(c_ulong(count))  # Note: Number of items Equipped
 
-			for item in items:
-				if item.is_equipped:
-					stream.write(c_longlong(item.item_id))
-					stream.write(c_long(item.item_lot))
+			for item in self._inventory:
+				if item['IsEquipped']:
+					stream.write(c_longlong(item['ItemID']))
+					stream.write(c_long(item['ItemLOT']))
 					stream.write(c_bit(False))
 					stream.write(c_bit(True))
-					stream.write(c_ulong(item.quantity))
+					stream.write(c_ulong(item['Quantity']))
 					stream.write(c_bit(True))
-					stream.write(c_ushort(item.slot))
+					stream.write(c_ushort(item['Slot']))
 					stream.write(c_bit(True))
-					stream.write(c_ulong(item.type))
+					stream.write(c_ulong(item['Type']))
 					stream.write(c_bit(False))
 					stream.write(c_bit(True))
 
 		stream.write(c_bit(False))
-
 
 	def write_construction(self, stream: WriteStream) -> None:
 		self.part1(stream)

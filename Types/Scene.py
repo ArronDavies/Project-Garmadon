@@ -1,7 +1,8 @@
 from Utils.GetProjectRoot import get_project_root
 from configparser import ConfigParser
 from bitstream import *
-from Types.Spawner import Spawner
+from Types.Object import Object
+from Types.LWOOBJID import LWOOBJID
 
 # Note: Some of LCDRs code is used here namely reading the LVL files, big thanks to him!!!
 
@@ -18,9 +19,9 @@ class Scene:
 		self.chunk_type = None
 		self.chunk_length = None
 
-		self.spawners = []
+		self.objects = []
 
-	def get_spawners(self):
+	def get_objects(self):
 		config = ConfigParser()
 		config.read(str(get_project_root()) + "/config.ini")
 		path = str(get_project_root()) + config[self.zone_id]['LVL']
@@ -78,40 +79,35 @@ class Scene:
 			pos_x = stream.read(c_float)
 			pos_y = stream.read(c_float)
 			pos_z = stream.read(c_float)
-
 			rot_w = stream.read(c_float)
 			rot_x = stream.read(c_float)
 			rot_y = stream.read(c_float)
 			rot_z = stream.read(c_float)
-
 			scale = stream.read(c_float)
 
 			settings = stream.read(str, length_type=c_uint)
 
+			settings_dict = {}
+			for setting in settings.split(u'\n'):
+				x, y = setting.split('=')
+				settings_dict[x] = y
+
 			if lot == 176:
-				spawner = Spawner()
 
-				spawner.spawner_object_id = object_id
+				obj_class = Object(lot=int(settings_dict['spawntemplate'].split(":")[1]), name="", object_id=LWOOBJID().generateobject())
 
-				spawner.pos_x = pos_x
-				spawner.pos_y = pos_y
-				spawner.pos_z = pos_z
+				obj_class.position_x = pos_x
+				obj_class.position_y = pos_y
+				obj_class.position_z = pos_z
+				obj_class.rotation_x = rot_x
+				obj_class.rotation_y = rot_y
+				obj_class.rotation_z = rot_z
+				obj_class.rotation_w = rot_w
+				obj_class.scale = scale
 
-				spawner.rot_x = rot_x
-				spawner.rot_y = rot_y
-				spawner.rot_z = rot_z
-				spawner.rot_w = rot_w
+				obj_class.settings = settings_dict
 
-				spawner.scale = scale
-
-				for setting in settings.split(u'\n'):
-					x, y = setting.split('=')
-
-					spawner.settings[x] = y
-
-				spawner.spawn_lot = spawner.settings['spawntemplate'].split(":")[1]
-
-				self.spawners.append(spawner)
+				self.objects.append(obj_class)
 
 
 			if self.luz_version >= 0x07:

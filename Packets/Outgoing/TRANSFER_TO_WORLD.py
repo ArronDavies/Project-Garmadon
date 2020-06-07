@@ -35,7 +35,7 @@ def TRANSFER_TO_WORLD(stream, conn, server, is_transfer=False, zone_id=0):
 				break
 
 		if session.current_character.last_zone == 0:
-			world_server_details = config['1000']
+			world_server_details = config['0']
 		else:
 			world_server_details = config[str(session.current_character.last_zone)]
 

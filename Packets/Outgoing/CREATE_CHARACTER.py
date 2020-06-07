@@ -43,6 +43,6 @@ def CREATE_CHARACTER(stream, conn,server):
 	session.current_character.create_player_object()
 	player_object = session.current_character.player_object
 
-	replica_manager.construct(player_object, True)
+	replica_manager.construct(player_object, new=True, important=True)
 
 	replica_manager.add_participant(conn=conn, server=server)

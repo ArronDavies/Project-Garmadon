@@ -1,16 +1,24 @@
+from typing import Iterable
+
 import Packets.Incoming
 import Packets.Outgoing
 from uuid import uuid3, NAMESPACE_DNS
-from pyraknet.server import Server
-from pyraknet.replicamanager import ReplicaManager
 from Types.Session import Session
-from pyraknet.transports.raknet.connection import *
-from bitstream import *
 from Logger import *
-from Types.LWOOBJID import LWOOBJID
 from GameMessages.Outgoing import *
 from Utils.LUZReader import LUZReader
-from threading import Thread
+
+from pyraknet.transports.abc import ConnectionEvent, Connection, Reliability
+from pyraknet.replicamanager import ReplicaManager, Replica
+from pyraknet.transports.raknet.connection import RaknetConnection
+from pyraknet.server import Server
+from pyraknet.messages import Message
+from bitstream import *
+
+
+class Replica(Replica):
+	def __init__(self):
+		self.important = True
 
 
 class Zone(Server):
@@ -25,11 +33,11 @@ class Zone(Server):
 		self._packets = {}
 		self._register_packets()
 		self._rct = 4
-		self._rep_man = ReplicaManager(dispatcher=self._dispatcher)
+		self._rep_man = CustomReplicaManager(dispatcher=self._dispatcher)
 
 		self.zone_data = None
 
-		self.spawners = {}
+		self.objects = {}
 
 		self.load_objects()
 		self.keep_alive_thread = None
@@ -55,8 +63,10 @@ class Zone(Server):
 		addressout = (str(host), int(port))
 		uid = str(uuid3(NAMESPACE_DNS, str(addressout)))
 		session = self._sessions[uid]
-		self._rep_man.destruct(session.current_character.player_object)
-		del self._sessions[uid]
+
+		if not None:
+			self._rep_man.destruct(session.current_character.player_object)
+			del self._sessions[uid]
 
 	def _on_lu_packet(self, data: bytes, conn: Connection):
 		stream = ReadStream(data)
@@ -108,28 +118,19 @@ class Zone(Server):
 		session.current_character.set_last_zone(args[1])
 		Packets.Outgoing.TRANSFER_TO_WORLD.TRANSFER_TO_WORLD(stream=None, conn=conn, server=self, is_transfer=True, zone_id=args[1])
 
-	def wear_item(self, session, args):
-		conn = session.connection
-		item_id = LWOOBJID().generate()
-		item = {"ItemID": item_id, "IsEquipped": 1, "IsLinked": 1, "Quantity": 1, "ItemLOT": args[1], "Type": 0}
-
-		session.current_character.inventory.add_item(item_data=item)
-
-		self._rep_man.serialize(session.current_character.player_object, reliability=Reliability.Unreliable)
-
 	def fly(self, session, filler_argument):
 		conn = session.connection
 
-		flight_mode = session.current_character.player_object.controllable_physics._is_jetpack_in_air
+		flight_mode = session.current_character.player_object.components[0]._is_jetpack_in_air
 
 		message = None
 		if flight_mode is False:
-			session.current_character.player_object.controllable_physics._is_jetpack_in_air = True
-			session.current_character.player_object.controllable_physics._jetpack_effect = 0xa7
+			session.current_character.player_object.components[0]._is_jetpack_in_air = True
+			session.current_character.player_object.components[0]._jetpack_effect = 0xa7
 			message = SetJetPackMode.SetJetPackMode(objid=session.current_character.object_id, bypass_checks=True, use=True, effect_id=-1)
 		elif flight_mode is True:
-			session.current_character.player_object.controllable_physics._is_jetpack_in_air = False
-			session.current_character.player_object.controllable_physics._jetpack_effect = 0x00
+			session.current_character.player_object.components[0]._is_jetpack_in_air = False
+			session.current_character.player_object.components[0]._jetpack_effect = 0x00
 			message = SetJetPackMode.SetJetPackMode(objid=session.current_character.object_id, bypass_checks=False, use=False, effect_id=-1)
 
 		conn.send(message, reliability=Reliability.Unreliable)
@@ -141,24 +142,76 @@ class Zone(Server):
 		self.zone_data = luz.zone
 
 		for scene in luz.zone.scenes:
-			scene.get_spawners()
+			scene.get_objects()
 
-			for spawner in scene.spawners:
-				spawner.get_components()
-				spawner.parse_settings()
+			for object in scene.objects:
+				object.get_components()
 
-				if spawner.is_constructable:
-					spawner.start(self)
-					self.spawners[spawner.spawner_object_id] = spawner
+				if object.is_constructable:
+					object.start(self)
+					self.objects[object.objid] = object
 				else:
 					pass
 
-	# 	self.keep_alive_thread = Thread(target=self.keep_alive)
-	# 	self.keep_alive_thread.isDaemon = True
-	# 	self.keep_alive_thread.start()
-	#
-	# def keep_alive(self):
-	# 	while True:
-	# 		for spawner in self.spawners:
-	# 			self.spawners[spawner].keep_alive()
-	# 		time.sleep(1)
+
+class CustomReplicaManager(ReplicaManager):
+	def add_participant(self, server, conn: Connection) -> None:
+		log(LOGGINGLEVEL.REPLICADEBUG, " added connection: " + str(conn.get_address()[0]))
+		self._participants.add(conn)
+
+		for obj in self._network_ids:
+			if obj.important:
+				self._construct(obj, new=False, recipients=[conn])
+
+		address = (str(conn.get_address()[0]), int(conn.get_address()[1]))
+		uid = str(uuid3(NAMESPACE_DNS, str(address)))
+		session = server.get_session(uid)
+
+		obj_load = ServerDoneLoadingAllObjects.ServerDoneLoadingAllObjects(objid=int(session.current_character.object_id), message_id=0x66a)
+		conn.send(obj_load, reliability=Reliability.ReliableOrdered)
+
+		player_ready = PlayerReady.PlayerReady(objid=int(session.current_character.object_id), message_id=0x1fd)
+		conn.send(player_ready, reliability=Reliability.ReliableOrdered)
+
+		for obj in self._network_ids:
+			if obj.important is not True:
+				self._construct(obj, new=False, recipients=[conn], reliability=Reliability.Reliable)
+
+	def serialize(self, obj: Replica, reliability=None) -> None:
+		out = WriteStream()
+		out.write(c_ubyte(Message.ReplicaManagerSerialize.value))
+		out.write(c_ushort(self._network_ids[obj]))
+		obj.serialize(out)
+
+		out = bytes(out)
+		for conn in self._participants:
+			if reliability is not None:
+				conn.send(out, reliability=reliability)
+			else:
+				conn.send(out)
+
+	def construct(self, obj: Replica, new: bool=True, important: bool=False, reliability=None) -> None:
+		self._construct(obj, new, important, reliability=None)
+
+	def _construct(self, obj: Replica, new: bool=True, important: bool=False, recipients: Iterable[Connection]=None, reliability=None) -> None:
+		# recipients is needed to send replicas to new participants
+		if recipients is None:
+			recipients = self._participants
+
+		if new:
+			self._network_ids[obj] = self._current_network_id
+			self._current_network_id += 1
+
+		out = WriteStream()
+		out.write(c_ubyte(Message.ReplicaManagerConstruction.value))
+		out.write(c_bit(True))
+		out.write(c_ushort(self._network_ids[obj]))
+		obj.write_construction(out)
+
+		out = bytes(out)
+		for conn in recipients:
+			if reliability is not None:
+				conn.send(out, reliability=reliability)
+			else:
+				conn.send(out)
+

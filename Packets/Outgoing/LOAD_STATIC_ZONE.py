@@ -19,7 +19,7 @@ def LOAD_STATIC_ZONE(stream, conn, server):
 			break
 
 	current_character = session.current_character
-	current_character.inventory.sync_inventory_down()
+	current_character.sync_inventory_down()
 
 	response.write(c_ushort(int(current_character.last_zone)))
 	response.write(c_ushort(0))

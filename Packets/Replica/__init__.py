@@ -10,3 +10,4 @@ from Packets.Replica import Component107
 from Packets.Replica import SimplePhysics
 from Packets.Replica import PhantomPhysics
 from Packets.Replica import Vendor
+from Packets.Replica import Script

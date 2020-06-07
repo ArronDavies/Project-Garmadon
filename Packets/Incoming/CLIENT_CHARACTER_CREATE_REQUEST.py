@@ -45,12 +45,12 @@ def CLIENT_CHARACTER_CREATE_REQUEST(stream, conn, server):
 	pantsLot = GetPantsLOT(char_dict['PantsColor'])
 	item_id = LWOOBJID().generate()
 	item = {"ItemID": item_id, "IsEquipped": 1, "IsLinked": 1, "Quantity": 1, "ItemLOT": pantsLot, "Type": 0}
-	char.inventory.add_item(item)
+	char.add_item(item)
 
 	shirtLot = GetShirtLOT(Color=char_dict['ShirtColor'], Style=char_dict['ShirtStyle'])
 	item_id = LWOOBJID().generate()
 	item2 = {"ItemID": item_id, "IsEquipped": 1, "IsLinked": 1, "Quantity": 1, "ItemLOT": shirtLot, "Type": 0}
-	char.inventory.add_item(item2)
+	char.add_item(item2)
 
 	if response == 0x00:  # Note: Successful
 		CHARACTER_CREATE_RESPONSE.CHARACTER_CREATE_RESPONSE(stream, conn, response)

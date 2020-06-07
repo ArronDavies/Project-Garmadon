@@ -51,13 +51,13 @@ def CHARACTER_LIST_RESPONSE(stream, conn, server):
 			response.write(c_ulong(0))  # TODO: Implement Last Clone
 			response.write(c_ulonglong(0))  # TODO: Implement Last Logout Timestamp
 
-			character.inventory.sync_inventory_down()
+			character.sync_inventory_down()
 
 			count = 0
 			equipped_item_list = []
-			for item in character.inventory.items:
-				if item.is_equipped == 1:
-					equipped_item_list.append(item.item_lot)
+			for item in character.inventory:
+				if item['IsEquipped'] == 1:
+					equipped_item_list.append(item['ItemLOT'])
 					count = count + 1
 
 			response.write(c_ushort(count))  # number of items to follow#

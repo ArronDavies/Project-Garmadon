@@ -1,7 +1,7 @@
-from Utils.GetProjectRoot import get_project_root
-from Types.Character import Character
-from Types.Inventory import Inventory
 import sqlite3
+
+from Types.Character import Character
+from Utils.GetProjectRoot import get_project_root
 
 
 class Session:
@@ -127,7 +127,7 @@ class Session:
 				char.stats = dbcmd.fetchone()
 				dbcmd.close()
 
-				char.inventory.sync_inventory_down()
+				char.sync_inventory_down()
 				self.characters.append(char)
 
 	def create_character(self, character):
@@ -151,7 +151,8 @@ class Session:
 				db.row_factory = sqlite3.Row
 				dbcmd = db.cursor()
 				query = "INSERT INTO Characters (AccountID, ObjectID, Name, UnapprovedName, ShirtColor, ShirtStyle, PantsColor, HairStyle, HairColor, LeftHand, RightHand, Eyebrows, Eyes, Mouth) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-				dbcmd.execute(query, (self.account_id, character['ObjectID'], character['Name'], character['UnapprovedName'], character['ShirtColor'], character['ShirtStyle'], character['PantsColor'], character['HairStyle'], character['HairColor'], character['LeftHand'], character['RightHand'], character['Eyebrows'], character['Eyes'], character['Mouth'],))
+				dbcmd.execute(query, (self.account_id, character['ObjectID'], character['Name'], character['UnapprovedName'], character['ShirtColor'], character['ShirtStyle'], character['PantsColor'],
+				                      character['HairStyle'], character['HairColor'], character['LeftHand'], character['RightHand'], character['Eyebrows'], character['Eyes'], character['Mouth'],))
 				db.commit()
 				dbcmd.close()
 

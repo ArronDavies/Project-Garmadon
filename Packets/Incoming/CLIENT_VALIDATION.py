@@ -2,10 +2,6 @@ from uuid import uuid3, uuid4, NAMESPACE_DNS
 import configparser
 import Packets.Outgoing
 
-config = configparser.ConfigParser()
-config.read('config.ini')
-char_info = config['CHARACTER']
-
 
 def CLIENT_VALIDATION(stream, conn, server):
 	username = stream.read(str, allocated_length=33)

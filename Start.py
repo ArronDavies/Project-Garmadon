@@ -1,4 +1,5 @@
 import asyncio
+import configparser
 import threading
 
 import Logger
@@ -9,16 +10,19 @@ from ZoneServer.Zone import Zone
 
 if __name__ == "__main__":
     Logger.logmanage()
+    config = configparser.ConfigParser()
+    config.read('config.ini')
+
     world_dict = {}
     try:
         auth = Auth(bind_ip="0.0.0.0", port=1001, max_connections=32, incoming_password=b"3.25 ND1", ssl=None)
         char = Character(bind_ip="0.0.0.0", port=1002, max_connections=32, incoming_password=b"3.25 ND1", ssl=None)
 
-        avant_zone = Zone(bind_ip="0.0.0.0", port=2100, max_connections=32, incoming_password=b"3.25 ND1", ssl=None, zone_id="1100")
-        world_dict['1100'] = avant_zone
+        zones_to_open = [1000, 1100, 1200, 1300]
+        for zone in zones_to_open:
+            zone_info = config[str(zone)]
+            world_dict[zone] = Zone(bind_ip="0.0.0.0", port=int(zone_info['Port']), max_connections=32, incoming_password=b"3.25 ND1", ssl=None, zone_id=str(zone))
 
-        nimbus_zone = Zone(bind_ip="0.0.0.0", port=2200, max_connections=32, incoming_password=b"3.25 ND1", ssl=None, zone_id="1200")
-        world_dict['1200'] = nimbus_zone
     except OSError:
         print("Ports cannot be occupied.")
         exit()

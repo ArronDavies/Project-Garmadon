@@ -18,17 +18,13 @@ def CLIENT_GENERAL_CHAT_MESSAGE(stream, conn, server):
 
 	commands = {}
 	commands['!tp'] = server.transfer_world
-	commands['!wear_item'] = server.wear_item
 	commands['!fly'] = server.fly
-	commands['!set_health'] = server.set_health
 	args = message.decode('utf-16le').rstrip(' \t\r\n\0').split(' ')  # Note: arg[0] is the command
 	
 	if args[0].startswith('!'):
 		if args[0] == "!help":
 			GENERAL_CHAT_MESSAGE.GENERAL_CHAT_MESSAGE(stream, conn, server, str("!tp <zone>"), "", 0)
-			GENERAL_CHAT_MESSAGE.GENERAL_CHAT_MESSAGE(stream, conn, server, str("!wear_item <lot>"), "", 0)
 			GENERAL_CHAT_MESSAGE.GENERAL_CHAT_MESSAGE(stream, conn, server, str("!fly"), "", 0)
-			GENERAL_CHAT_MESSAGE.GENERAL_CHAT_MESSAGE(stream, conn, server, str("!set_health <health>"), "", 0)
 		else:
 			try:
 				commands[args[0]](sendersession, args)

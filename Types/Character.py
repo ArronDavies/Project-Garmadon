@@ -1,15 +1,17 @@
-from Types.Inventory import Inventory
-from Packets.Replica.Player import Player
+from Types.Object import Object
 from Types.Vector3 import Vector3
 from Types.Vector4 import Vector4
 import sqlite3
 from Utils.GetProjectRoot import get_project_root
+from Packets.Replica import *
+from Packets.Replica import Character as Char
+import random
 
 
 class Character:
 	def __init__(self):
 		self.account_id = None
-		self.inventory = Inventory(self)
+		self.inventory = []
 		self.id = None
 		self.object_id = None
 		self.name = None
@@ -61,6 +63,10 @@ class Character:
 		self.render_dict = {}
 		self.component107_dict = {}
 		self.other_data_dict = {}
+
+		self.is_recording = False
+		self.recording_last_position_time = None
+		self.recording_positions = []
 
 	def create_player_object(self):
 		self.controllable_physics_dict['IsJetpackEquipped'] = False
@@ -151,7 +157,16 @@ class Character:
 
 		self.render_dict['Effects'] = 0
 
-		self.player_object = Player(self.controllable_physics_dict, self.destructible_dict, self.stats_dict, self.character_dict, self.inventory_dict, self.skill_dict, self.render_dict, self.component107_dict, self.other_data_dict)
+		self.player_object = Object(lot=1, object_id=self.object_id, name=self.name)
+		self.player_object.components.append(ControllablePhysics.ControllablePhysics(controllable_physics_dict=self.controllable_physics_dict))
+		self.player_object.components.append(Destructible.Destructible(destructible_dict=self.destructible_dict))
+		self.player_object.components.append(Stats.Stats(stats_dict=self.stats_dict))
+		self.player_object.components.append(Char.Character(character_dict=self.character_dict))
+		self.player_object.components.append(Inventory.Inventory(inventory_dict=self.inventory_dict))
+		self.player_object.components.append(Skill.Skill(skill_dict=self.skill_dict))
+		self.player_object.components.append(Render.Render(render_dict=self.render_dict))
+		self.player_object.components.append(Component107.Component107(component107_dict=self.component107_dict))
+		self.player_object.important = True
 
 	def set_last_zone(self, zone_id):
 		self.last_zone = zone_id
@@ -181,3 +196,81 @@ class Character:
 		dbcmd.execute(query, (self.x_pos, self.y_pos, self.z_pos,self.id,))
 		db.commit()
 		dbcmd.close()
+
+	def sync_inventory_down(self):
+		db = sqlite3.connect(str(str(get_project_root()) + "/PikaChewniverse.sqlite"))
+		db.row_factory = sqlite3.Row
+		dbcmd = db.cursor()
+		query = "SELECT * FROM Inventory WHERE CharID = ?"
+		dbcmd.execute(query, (self.id,))
+		value = dbcmd.fetchall()
+		self.inventory.clear()
+		for item in value:
+			newitem = {}
+			newitem['ItemLOT'] = item['ItemLOT']
+			newitem['Quantity'] = item['Quantity']
+			newitem['IsEquipped'] = item['IsEquipped']
+			newitem['IsLinked'] = item['IsLinked']
+			newitem['Slot'] = item['Slot']
+			newitem['ItemID'] = item['ItemID']
+
+			db = sqlite3.connect(str(str(get_project_root()) + "/clientfiles/cdclient.sqlite"))
+			dbcmd = db.cursor()
+			query = "SELECT itemType FROM ItemComponent WHERE id = ?"
+			dbcmd.execute(query, (item['ItemLOT'],))
+			item_type = dbcmd.fetchall()
+			
+			newitem['Type'] = item_type[0][0]
+			self.inventory.append(newitem)
+
+		dbcmd.close()
+
+	def add_item(self, item_data):
+		self.sync_inventory_down()
+
+		db = sqlite3.connect(str(str(get_project_root()) + "/clientfiles/cdclient.sqlite"))
+		dbcmd = db.cursor()
+		query = "SELECT stackSize FROM ItemComponent WHERE id = ?"
+		dbcmd.execute(query, (item_data['ItemLOT'],))
+		stack_size = dbcmd.fetchall()
+
+		added = False
+
+		for item in self.inventory:
+			if item_data['ItemLOT'] == item['ItemLOT'] and item['Quantity'] < stack_size[0]:
+				item['Quantity'] = item['Quantity'] + item_data['Quantity']
+
+				db = sqlite3.connect(str(str(get_project_root()) + "/PikaChewniverse.sqlite"))
+				db.row_factory = sqlite3.Row
+				dbcmd = db.cursor()
+				query = "UPDATE Inventory SET Quantity = ? WHERE ItemID = ?"
+				dbcmd.execute(query, (item['Quantity'], item['ItemLOT'],))
+				db.commit()
+				dbcmd.close()
+				added = True
+				break
+
+		db = sqlite3.connect(str(str(get_project_root()) + "/PikaChewniverse.sqlite"))
+		dbcmd = db.cursor()
+		query = "SELECT InventorySpace FROM Characters WHERE CharID = ?"
+		dbcmd.execute(query, (self.id,))
+		inventoy_space = dbcmd.fetchone()
+
+		if len(self.inventory) < inventoy_space[0]:
+			if added is False:
+				db = sqlite3.connect(str(str(get_project_root()) + "/PikaChewniverse.sqlite"))
+				db.row_factory = sqlite3.Row
+				dbcmd = db.cursor()
+				query = "INSERT INTO Inventory (CharID, ItemLOT, IsEquipped, IsLinked, Quantity, Slot, ItemID) VALUES (?, ?, ?, ?, ?, ?, ?)"
+				dbcmd.execute(query, (self.id, item_data['ItemLOT'], item_data['IsEquipped'], item_data['IsLinked'], item_data['Quantity'], len(self.inventory) + 1, random.randrange(100000, 100000000),))
+				db.commit()
+				dbcmd.close()
+
+				added = True
+
+		self.sync_inventory_down()
+
+		return added
+
+
+
