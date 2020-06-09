@@ -1,7 +1,0 @@
-venv/
-.idea/
-config.ini
-pikachewniverse.log
-*.pyc
-__pycache__/
-Logs/
