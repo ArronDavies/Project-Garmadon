@@ -21,7 +21,11 @@ class AccountErrorCodes(enum.IntEnum):
 
 # Note: Don't assign anything equal to or below 255(0XFF)
 class GeneralErrorCodes(enum.IntEnum):
-	NoSessionDataSpecified = 0xFFFF,
-	NoIDSpecified = 0XFFFE,
-	NoUsernameSpecified = 0XFFFD,
-	NoPasswordSpecified = 0XFFFc
+	NoAuthCodeSpecified = 0xFFFF,  # Note: 65535
+	AuthCodeIncorrect = 0xFFFE,  # Note: 65534
+	NoSessionDataSpecified = 0xFFFD,  # Note: 65533
+	NoIDSpecified = 0xFFFC,  # Note: 65532
+	NoUsernameSpecified = 0xFFFB,  # Note: 65531
+	NoPasswordSpecified = 0xFFFA,  # Note: 65530
+	NoIPSpecified = 0xFFF9,  # Note: 65529
+	NoPortSpecified = 0xFFF8  # Note: 65528
