@@ -4,13 +4,18 @@ import threading
 
 try:
     import Logger
+except:
+    print("No config has been generated")
+    exit(1)
+try:
     from AuthServer.Auth import Auth
     from CLI import CLI
     from CharacterServer.Character import Character
     from ZoneServer.Zone import Zone
 except:
-    print("Files are missing")
+    print("Essential parts of the server are missing")
     exit(1)
+
     
 import subprocess
 import sys
