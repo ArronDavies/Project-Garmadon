@@ -2,13 +2,50 @@ import asyncio
 import configparser
 import threading
 
-import Logger
-from AuthServer.Auth import Auth
-from CLI import CLI
-from CharacterServer.Character import Character
-from ZoneServer.Zone import Zone
+try:
+    import Logger
+    from AuthServer.Auth import Auth
+    from CLI import CLI
+    from CharacterServer.Character import Character
+    from ZoneServer.Zone import Zone
+except:
+    print("Files are missing")
+    exit(1)
+    
+import subprocess
+import sys
+
+def install(package):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+
+def requirementsCheck():
+    try:
+        import pyraknet
+    except ImportError:
+        install("git+git://github.com/lcdr/pyraknet.git@259b305#egg=pyraknet")
+    try:
+        import bitstream
+    except ImportError:
+        install("git+git://github.com/lcdr/bitstream.git@b3389c8#egg=bitstream")
+    try:
+        import event_dispatcher
+    except ImportError:
+        install("git+git://github.com/lcdr/py_event_dispatcher.git@4e77404#egg=event_dispatcher")
+    try:
+        import requests
+    except ImportError:
+        install("requests")
+    try:
+        import bcrypt
+    except ImportError:
+        install("bcrypt")
+    try:
+        import better_profanity
+    except ImportError:
+        install("git+git://github.com/snguyenthanh/better_profanity.git@e352465#egg=better_profanity")
 
 if __name__ == "__main__":
+    requirementsCheck()
     Logger.logmanage()
     config = configparser.ConfigParser()
     config.read('config.ini')
