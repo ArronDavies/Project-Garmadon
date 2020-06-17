@@ -1,4 +1,5 @@
 import os
+import Utils.GetProjectRoot
 
 
 def inicheck():
@@ -50,8 +51,8 @@ def inicheck():
 
 
 def write():
-    f = open("../config.ini", "a")  # THIS IS NOT CORRECT
-    f.write("\n;This is a config file for the PikaChewniverse settings.")
+    f = open("config.ini", "a")
+    f.write("\n;This is a config file for the Garmadon settings.")
     f.write("\n")
     f.write("\n[CHARACTER]")
     f.write("\nHost = 127.0.0.1")
@@ -70,9 +71,8 @@ def write():
     f.write("\n[LOGGING]")
     f.write("\nLogOutput = True")
     f.write("\n")
-    f.write("\n")
     f.close()
 
 
-if __name__ == "__main__":
+def main():
     inicheck()

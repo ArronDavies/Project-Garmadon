@@ -51,7 +51,7 @@ def LOGIN_RESPONSE(stream, conn, server):
 	response.write(c_bool(False))  # Is FTP?
 	response.write(c_ulonglong(0))  # Unknown data, always 0?
 
-	response.write("Pika-Chew :D", length_type=c_ushort)  # Custom error message
+	response.write("Project Garmadon Error", length_type=c_ushort)  # Custom error message
 	response.write(c_ushort(0))
 	response.write(c_ulong(4))
 	conn.send(response, reliability=Reliability.Reliable)

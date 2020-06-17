@@ -171,7 +171,7 @@ class Character:
 	def set_last_zone(self, zone_id):
 		self.last_zone = zone_id
 
-		db = sqlite3.connect(str(get_project_root()) + "/PikaChewniverse.sqlite")
+		db = sqlite3.connect(str(get_project_root()) + "/Garmadon.sqlite")
 		db.row_factory = sqlite3.Row
 		dbcmd = db.cursor()
 		query = "UPDATE Characters SET LastZone = ? WHERE CharID = ?"
@@ -189,7 +189,7 @@ class Character:
 		self.z_rot = rotation.z
 		self.w_rot = rotation.w
 
-		db = sqlite3.connect(str(get_project_root()) + "/PikaChewniverse.sqlite")
+		db = sqlite3.connect(str(get_project_root()) + "/Garmadon.sqlite")
 		db.row_factory = sqlite3.Row
 		dbcmd = db.cursor()
 		query = "UPDATE Characters SET X = ?, Y = ?, Z = ? WHERE CharID = ?"
@@ -198,7 +198,7 @@ class Character:
 		dbcmd.close()
 
 	def sync_inventory_down(self):
-		db = sqlite3.connect(str(str(get_project_root()) + "/PikaChewniverse.sqlite"))
+		db = sqlite3.connect(str(str(get_project_root()) + "/Garmadon.sqlite"))
 		db.row_factory = sqlite3.Row
 		dbcmd = db.cursor()
 		query = "SELECT * FROM Inventory WHERE CharID = ?"
@@ -240,7 +240,7 @@ class Character:
 			if item_data['ItemLOT'] == item['ItemLOT'] and item['Quantity'] < stack_size[0]:
 				item['Quantity'] = item['Quantity'] + item_data['Quantity']
 
-				db = sqlite3.connect(str(str(get_project_root()) + "/PikaChewniverse.sqlite"))
+				db = sqlite3.connect(str(str(get_project_root()) + "/Garmadon.sqlite"))
 				db.row_factory = sqlite3.Row
 				dbcmd = db.cursor()
 				query = "UPDATE Inventory SET Quantity = ? WHERE ItemID = ?"
@@ -250,7 +250,7 @@ class Character:
 				added = True
 				break
 
-		db = sqlite3.connect(str(str(get_project_root()) + "/PikaChewniverse.sqlite"))
+		db = sqlite3.connect(str(str(get_project_root()) + "/Garmadon.sqlite"))
 		dbcmd = db.cursor()
 		query = "SELECT InventorySpace FROM Characters WHERE CharID = ?"
 		dbcmd.execute(query, (self.id,))
@@ -258,7 +258,7 @@ class Character:
 
 		if len(self.inventory) < inventoy_space[0]:
 			if added is False:
-				db = sqlite3.connect(str(str(get_project_root()) + "/PikaChewniverse.sqlite"))
+				db = sqlite3.connect(str(str(get_project_root()) + "/Garmadon.sqlite"))
 				db.row_factory = sqlite3.Row
 				dbcmd = db.cursor()
 				query = "INSERT INTO Inventory (CharID, ItemLOT, IsEquipped, IsLinked, Quantity, Slot, ItemID) VALUES (?, ?, ?, ?, ?, ?, ?)"

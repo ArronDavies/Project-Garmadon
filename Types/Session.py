@@ -28,7 +28,7 @@ class Session:
 		self.characters = []
 
 	def sync_account_values_down(self):
-		db = sqlite3.connect(str(str(get_project_root()) + "/PikaChewniverse.sqlite"))
+		db = sqlite3.connect(str(str(get_project_root()) + "/Garmadon.sqlite"))
 		db.row_factory = sqlite3.Row
 
 		dbcmd = db.cursor()
@@ -50,7 +50,7 @@ class Session:
 	def set_session_key(self, key):
 		self.session_key = key
 
-		db = sqlite3.connect(str(get_project_root()) + "/PikaChewniverse.sqlite")
+		db = sqlite3.connect(str(get_project_root()) + "/Garmadon.sqlite")
 		db.row_factory = sqlite3.Row
 		dbcmd = db.cursor()
 		query = "UPDATE Accounts SET SessionKey = ? WHERE Username = ?"
@@ -61,7 +61,7 @@ class Session:
 	def set_current_character_id(self, charid):
 		self.current_character_id = charid
 
-		db = sqlite3.connect(str(get_project_root()) + "/PikaChewniverse.sqlite")
+		db = sqlite3.connect(str(get_project_root()) + "/Garmadon.sqlite")
 		db.row_factory = sqlite3.Row
 		dbcmd = db.cursor()
 		query = "UPDATE Accounts SET CurrentCharacterID = ? WHERE Username = ?"
@@ -70,7 +70,7 @@ class Session:
 		dbcmd.close()
 
 	def sync_characters_down(self):
-		db = sqlite3.connect(str(str(get_project_root()) + "/PikaChewniverse.sqlite"))
+		db = sqlite3.connect(str(str(get_project_root()) + "/Garmadon.sqlite"))
 		db.row_factory = sqlite3.Row
 
 		dbcmd = db.cursor()
@@ -131,7 +131,7 @@ class Session:
 				self.characters.append(char)
 
 	def create_character(self, character):
-		db = sqlite3.connect(str(str(get_project_root()) + "/PikaChewniverse.sqlite"))
+		db = sqlite3.connect(str(str(get_project_root()) + "/Garmadon.sqlite"))
 		db.row_factory = sqlite3.Row
 		dbcmd = db.cursor()
 
@@ -147,7 +147,7 @@ class Session:
 
 		if unapprovednameexists is None:
 			if nameexists is None:
-				db = sqlite3.connect(str(str(get_project_root()) + "/PikaChewniverse.sqlite"))
+				db = sqlite3.connect(str(str(get_project_root()) + "/Garmadon.sqlite"))
 				db.row_factory = sqlite3.Row
 				dbcmd = db.cursor()
 				query = "INSERT INTO Characters (AccountID, ObjectID, Name, UnapprovedName, ShirtColor, ShirtStyle, PantsColor, HairStyle, HairColor, LeftHand, RightHand, Eyebrows, Eyes, Mouth) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"

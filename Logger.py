@@ -23,7 +23,7 @@ def log(logginglevel, message, packet=""):
         print(u"" + logginglevel + LOGGINGLEVEL.PACKET + packet + LOGGINGLEVEL.MESSAGE + message)
     
     if logging_info['LogOutput'] == "True":
-        logging.basicConfig(level=logging.INFO, filename='pikachewniverse.log')
+        logging.basicConfig(level=logging.INFO, filename='Garmadon.log')
         logging.debug("" + LOGGINGLEVEL.PACKET + packet + LOGGINGLEVEL.MESSAGE + message)
     else:
         pass
@@ -43,11 +43,11 @@ def logmanage():
             pass
         else:
             os.chdir("Logs")
-        if os.path.exists("pikachewniverse.log"):
+        if os.path.exists("Garmadon.log"):
             now = datetime.now()
             dt_string = now.strftime("%d-%m-%Y-%H-%M-%S")
-            shutil.move((str(Path.cwd()) + r"\pikachewniverse.log"), (str(Path.cwd()) + "\Logs\\"))
-            os.rename((str(Path.cwd()) + r"\Logs\pikachewniverse.log"),(str(Path.cwd()) + "\Logs\\" + dt_string + ".log"))
+            shutil.move((str(Path.cwd()) + r"\Garmadon.log"), (str(Path.cwd()) + "\Logs\\"))
+            os.rename((str(Path.cwd()) + r"\Logs\Garmadon.log"),(str(Path.cwd()) + "\Logs\\" + dt_string + ".log"))
         else:
             pass
     else:

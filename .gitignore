@@ -1,7 +1,7 @@
 venv/
 .idea/
 config.ini
-pikachewniverse.log
+garmadon.log
 *.pyc
 __pycache__/
 Logs/
