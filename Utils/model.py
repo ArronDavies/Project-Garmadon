@@ -1,6 +1,7 @@
 import sqlite3 as sqlite
 import os
 
+
 def main():
     if os.path.exists("Garmadon.sqlite"):
         pass

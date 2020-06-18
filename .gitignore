@@ -3,6 +3,7 @@ venv/
 config.ini
 garmadon.log
 Garmadon.sqlite
+clientfiles/maps/
 *.pyc
 __pycache__/
 Logs/

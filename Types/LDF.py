@@ -7,6 +7,7 @@ class LDF(bitstream.Serializable):
     """
     Lego Data Format
     """
+
     def __init__(self):
         self._keys: list = []
 

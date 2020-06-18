@@ -1,6 +1,6 @@
-PRAGMA foreign_keys=OFF;
-BEGIN TRANSACTION;
-CREATE TABLE Stats
+pragma foreign_keys=off;
+begin transaction;
+create table Stats
 (
 	CharID int,
 	CurrencyCollected int default 0,
@@ -31,41 +31,41 @@ CREATE TABLE Stats
 	RacesFinished int default 0,
 	FirstPlaceRaceWins int default 0
 );
-CREATE TABLE IF NOT EXISTS "Accounts"
+create table if not exists "Accounts"
 (
-	id INTEGER
+	id integer
 		primary key autoincrement
 		unique,
-	Username TEXT,
-	Email TEXT,
-	Password TEXT,
+	Username text,
+	Email text,
+	Password text,
 	SessionKey int,
 	FirstLogin boolean default True,
 	Banned boolean default False,
 	Admin boolean default False
 , CurrentCharacterID int);
-INSERT INTO Accounts VALUES(1,'Player','123','$2b$12$SozEPlkWaivFhBIeZGiMMuP2hqY1Zd8vOBoOpG50vUfVFze6FBNxW','',1,0,1,1);
-CREATE TABLE IF NOT EXISTS "Characters"
+insert into Accounts values(1,'Player','123','$2b$12$SozEPlkWaivFhBIeZGiMMuP2hqY1Zd8vOBoOpG50vUfVFze6FBNxW','',1,0,1,1);
+create table if not exists "Characters"
 (
-	CharID INTEGER
+	CharID integer
 		constraint Characters_pk
 			primary key autoincrement
 		unique,
-	AccountID INTEGER,
-	ObjectID INTEGER,
-	Name TEXT,
-	UnapprovedName TEXT,
-	ShirtColor INTEGER,
-	ShirtStyle INTEGER,
-	PantsColor INTEGER,
-	HairStyle INTEGER,
-	HairColor INTEGER,
-	LeftHand INTEGER,
-	RightHand INTEGER,
-	Eyebrows INTEGER,
-	Eyes INTEGER,
-	Mouth INTEGER,
-	LastZone INTEGER default 1100,
+	AccountID integer,
+	ObjectID integer,
+	Name text,
+	UnapprovedName text,
+	ShirtColor integer,
+	ShirtStyle integer,
+	PantsColor integer,
+	HairStyle integer,
+	HairColor integer,
+	LeftHand integer,
+	RightHand integer,
+	Eyebrows integer,
+	Eyes integer,
+	Mouth integer,
+	LastZone integer default 1100,
 	Health int default 4,
 	MaxHealth float default 4,
 	Armor int default 0,
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS "Characters"
 	Y float,
 	Z float
 );
-CREATE TABLE IF NOT EXISTS "Inventory"
+create table if not exists "Inventory"
 (
 	CharID int,
 	ItemLOT int,
@@ -93,9 +93,9 @@ CREATE TABLE IF NOT EXISTS "Inventory"
 		constraint Inventory_pk
 			primary key
 );
-DELETE FROM sqlite_sequence;
-INSERT INTO sqlite_sequence VALUES('Accounts',3);
-INSERT INTO sqlite_sequence VALUES('Characters',23);
-CREATE UNIQUE INDEX Inventory_ItemID_uindex
+delete from sqlite_sequence;
+insert into sqlite_sequence values('Accounts',3);
+insert into sqlite_sequence values('Characters',23);
+create unique index Inventory_ItemID_uindex
 	on Inventory (ItemID);
-COMMIT;
+commit;

@@ -3,7 +3,7 @@ from bitstream import *
 from Types.Vector3 import Vector3
 
 
-class ZONE_CHECKSUMS(IntEnum):
+class ZONE_CHECKSUMS(IntEnum):  # Checksums used by the client to stop cheating
     VENTURE_EXPLORER = 0x20b8087c
     RETURN_TO_VENTURE_EXPLORER = 0x26680a3c
     AVANT_GARDENS = 0x49525511
@@ -37,7 +37,7 @@ class ZONE_CHECKSUMS(IntEnum):
     FRAKJAW_BATTLE = 0x09eb00ef
 
 
-class ZONE_IDS(IntEnum):
+class ZONE_IDS(IntEnum):  # World IDs
     VENTURE_EXPLORER = 1000
     RETURN_TO_VENTURE_EXPLORER = 1001
     AVANT_GARDENS = 1100
@@ -69,6 +69,7 @@ class ZONE_IDS(IntEnum):
     NEXUS_TOWER = 1900
     NINJAGO = 2000
     FRAKJAW_BATTLE = 2001
+
 
 LEGO_DATA_TYPES = {
     str: 0,

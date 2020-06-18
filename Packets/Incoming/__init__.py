@@ -12,3 +12,5 @@ import Packets.Incoming.CLIENT_STRING_CHECK
 import Packets.Incoming.CLIENT_GENERAL_CHAT_MESSAGE
 import Packets.Incoming.GET_FRIENDS_LIST
 import Packets.Incoming.CLIENT_HANDLE_FUNNESS
+
+# These are all packet handlers for ones sent to the server
