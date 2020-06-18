@@ -2,6 +2,17 @@ import asyncio
 import configparser
 import threading
 import os
+import Utils.model
+
+if os.path.exists("Garmadon.sqlite"):
+    count = 0
+    with open("Garmadon.sqlite") as f:
+        for line in f:
+            count += 1
+    if count < 10:
+        pass
+else:
+    Utils.model.main()
 
 def install():
     os.system('cmd /c "pip install -r requirements.txt"')
