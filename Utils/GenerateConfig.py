@@ -1,53 +1,6 @@
 import os
 import Utils.GetProjectRoot
-
-
-def inicheck():
-	if os.path.exists("../config.ini"):  # Because what even is a switch case
-		i = 11
-		while i > 10:
-			print("Config exists are you sure you want to over write it. Y/N")
-			choice = input()
-			if choice == "Y":
-				write()
-				exit()
-			else:
-				pass
-			if choice == "y":
-				write()
-				exit()
-			else:
-				pass
-			if choice == "N":
-				exit()
-			else:
-				pass
-			if choice == "n":
-				exit()
-			else:
-				pass
-			if choice == "yes":
-				write()
-				exit()
-			else:
-				pass
-			if choice == "Yes":
-				write()
-				exit()
-			else:
-				pass
-			if choice == "no":
-				exit()
-			else:
-				pass
-			if choice == "No":
-				exit()
-			else:
-				pass
-		else:
-			print("Unknown Response")
-	else:
-		write()
+import socket
 
 
 def write():
@@ -72,7 +25,3 @@ def write():
 	f.write("\nLogOutput = True")
 	f.write("\n")
 	f.close()
-
-
-def main():
-	inicheck()

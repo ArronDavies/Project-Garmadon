@@ -27,13 +27,13 @@ def CLIENT_GENERAL_CHAT_MESSAGE(stream, conn, server):
 	if args[0].startswith('!'):
 		if args[0] == "!help":
 			GENERAL_CHAT_MESSAGE.GENERAL_CHAT_MESSAGE(stream, conn, server, str("!tp <zone>"), "", 0)
+			GENERAL_CHAT_MESSAGE.GENERAL_CHAT_MESSAGE(stream, conn, server, str("!wear_item <lot>"), "", 0)
 			GENERAL_CHAT_MESSAGE.GENERAL_CHAT_MESSAGE(stream, conn, server, str("!fly"), "", 0)
 		else:
 			try:
 				commands[args[0]](sendersession, args)
 			except KeyError:
-				GENERAL_CHAT_MESSAGE.GENERAL_CHAT_MESSAGE(stream, conn, server, str("That command does not exist"), "",
-														  0)
+				GENERAL_CHAT_MESSAGE.GENERAL_CHAT_MESSAGE(stream, conn, server, str("That command does not exist"), "", 0)
 	else:
 		if better_profanity.profanity.contains_profanity(str(message, 'latin1')):
 			pass

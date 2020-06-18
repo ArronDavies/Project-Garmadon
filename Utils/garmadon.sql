@@ -93,9 +93,6 @@ create table if not exists "Inventory"
 		constraint Inventory_pk
 			primary key
 );
-delete from sqlite_sequence;
-insert into sqlite_sequence values('Accounts',3);
-insert into sqlite_sequence values('Characters',23);
 create unique index Inventory_ItemID_uindex
 	on Inventory (ItemID);
 commit;

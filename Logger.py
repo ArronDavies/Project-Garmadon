@@ -35,9 +35,6 @@ def log(logginglevel, message, packet=""):
 def logmanage():
 	if os.path.exists("Logs"):
 		dir = (str(Path.cwd()) + '\\Logs')
-		count = 0
-		for name in os.listdir(dir):
-			count = + 1
 		if (len([name for name in os.listdir(dir) if os.path.isfile(os.path.join(dir, name))])) > 19:
 			try:
 				shutil.rmtree('Logs')
@@ -59,6 +56,24 @@ def logmanage():
 			pass
 	else:
 		os.mkdir("Logs")
+
+
+def chatlogmanage():
+	if os.path.exists("ChatLogs"):
+		dir = (str(Path.cwd()) + '\\ChatLogs')
+		if (len([name for name in os.listdir(dir) if os.path.isfile(os.path.join(dir, name))])) > 19:
+			shutil.rmtree('ChatLogs')
+			os.mkdir('ChatLogs')
+		else:
+			pass
+		if os.path.exists("chat.log"):
+			now = datetime.now()
+			dt_string = now.strftime("%d-%m-%Y-%H-%M-%S")
+			os.rename((str(Path.cwd()) + r"\\chat.log"), (str(Path.cwd()) + "\ChatLogs\\" + dt_string + ".log"))
+		else:
+			pass
+	else:
+		os.mkdir("ChatLogs")
 
 
 class LOGGINGLEVEL:

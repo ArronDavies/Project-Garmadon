@@ -15,7 +15,6 @@ else:
 def install():
 	os.system('cmd /c "pip install -r requirements.txt"')
 
-
 try:
 	import Logger
 except:
@@ -23,7 +22,7 @@ except:
 	print("Generating now")
 	import Utils.GenerateConfig
 
-	Utils.GenerateConfig.main()
+	Utils.GenerateConfig.write()
 finally:
 	import Logger
 try:
@@ -38,6 +37,7 @@ if __name__ == "__main__":
 	config = configparser.ConfigParser()
 	config.read('config.ini')
 	Logger.logmanage()
+	Logger.chatlogmanage()
 
 	world_dict = {}
 	try:

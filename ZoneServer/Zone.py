@@ -129,6 +129,10 @@ class Zone(Server):
 		self._rep_man.destruct(session.current_character.player_object)
 		del self._sessions[uid]
 
+	#def sendmessage(self, message, stream):
+	#	for session in server._sessions:
+	#		Packets.Outgoing.GENERAL_CHAT_MESSAGE.GENERAL_CHAT_MESSAGE(stream, self._sessions[session].connection, self.server, message, sender_name="", sender_objid=0)
+
 	def fly(self, session, filler_argument):
 		conn = session.connection
 

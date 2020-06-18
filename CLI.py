@@ -1,6 +1,7 @@
 import argparse
+import os
 from Logger import *
-
+from Packets.Outgoing import *
 
 class CLI:
 	def __init__(self, world_dict):
@@ -11,7 +12,12 @@ class CLI:
 		self.commands['/tp'] = self.handle_tp
 		self.commands['/fly'] = self.fly
 
+		self.commands['/logs'] = self.logs
+		self.commands['/chatlogs'] = self.chatlogs
+		#self.commands['/systemmessage'] = self.systemmessage
+
 		self.main()
+
 
 	def main(self):
 		while True:
@@ -22,9 +28,14 @@ class CLI:
 			except KeyError:
 				log(LOGGINGLEVEL.ERROR, " That command does not exist")
 
+
 	def handle_help(self, args):
 		print("/tp <name> <new world id>")
 		print("/fly <name>")
+		print("/logs")
+		print("/chatlogs")
+		#print("/systemmessage <message>")
+
 
 	def handle_tp(self, args):
 		char_exists = False
@@ -42,6 +53,7 @@ class CLI:
 		if char_exists is False:
 			log(LOGGINGLEVEL.ERROR, " No user with that name exists")
 
+
 	def handle_wear_item(self, args):
 		char_exists = False
 		for server in self.world_dict:
@@ -56,6 +68,7 @@ class CLI:
 		if char_exists is False:
 			log(LOGGINGLEVEL.ERROR, " No user with that name exists")
 
+
 	def fly(self, args):
 		char_exists = False
 		for server in self.world_dict:
@@ -68,3 +81,23 @@ class CLI:
 					char_exists = False
 		if char_exists is False:
 			log(LOGGINGLEVEL.ERROR, " No user with that name exists")
+
+
+	def chatlogs(self, args):
+		if os.path.exists('chat.log'):
+			with open('chat.log', 'r') as file:
+				print(file.read())
+		else:
+			print("There are no current chat messages")
+
+
+	def logs(self, args):
+		if os.path.exists('Garmadon.log'):
+			with open('Garmadon.log', 'r') as file:
+				print(file.read())
+		else:
+			print("There are no current logs")
+
+
+	#def systemmessage(self, args):
+	#	Zone.sendmessage(args[1])
