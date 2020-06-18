@@ -22,7 +22,7 @@ These prerequisites are needed so that the server can run and are installed when
 [bcrypt](https://pypi.org/project/bcrypt/), [requests](https://pypi.org/project/requests/), [event_dispatcher](https://github.com/lcdr/py_event_dispatcher), [bitstream](https://github.com/lcdr/bitstream), [pyraknet](https://github.com/lcdr/pyraknet), [better_profanity](https://pypi.org/project/better-profanity/).
 
 ## Config
-Currrently configuration is a quite easy all you need to do is run Start.py and it will generate the SQL table and the config file then copy the maps folder in a unpacked client to the clientfiles folder in the project folder
+Currrently configuration is a quite easy all you need to do is run Start.py and it will generate the SQL table and the config file then copy the maps folder in a unpacked client to the clientfiles folder in the project
 
 ## Extra
 This server is not meant to be hosted publicly as it is missing many features that LEGO requires a public server to have you can find a list of requirements [here](https://mega.nz/file/Jt1S1SYB#8wC8Ubqq8yQ4-4tVR1y7VrZEkCAUZuaNKjjeZQ6dhe8)
