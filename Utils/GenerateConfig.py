@@ -3,7 +3,7 @@ import Utils.GetProjectRoot
 
 
 def inicheck():
-    if os.path.exists("../config.ini"):
+    if os.path.exists("../config.ini"):  # Because what even is a switch case
         i = 11
         while i > 10:
             print("Config exists are you sure you want to over write it. Y/N")

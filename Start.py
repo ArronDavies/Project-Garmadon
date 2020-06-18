@@ -3,19 +3,18 @@ import configparser
 import threading
 import os
 import Utils.model
+from pathlib import Path
 
 if os.path.exists("Garmadon.sqlite"):
-    count = 0
-    with open("Garmadon.sqlite") as f:
-        for line in f:
-            count += 1
-    if count < 10:
+    if Path('Garmadon.sqlite').stat().st_size < 10:
         pass
 else:
     Utils.model.main()
 
+
 def install():
     os.system('cmd /c "pip install -r requirements.txt"')
+
 
 try:
     import Logger
@@ -23,6 +22,7 @@ except:
     print("No config has been generated")
     print("Generating now")
     import Utils.GenerateConfig
+
     Utils.GenerateConfig.main()
 finally:
     import Logger
@@ -65,9 +65,6 @@ if __name__ == "__main__":
             else:
                 print("Ports are occupied")
                 exit()
-
-
-
 
     cli = threading.Thread(target=CLI, args=(world_dict,))
     cli.start()

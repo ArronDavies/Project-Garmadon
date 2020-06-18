@@ -1,6 +1,0 @@
-bcrypt==3.1.7
-requests==2.23.0
-git+git://github.com/lcdr/py_event_dispatcher.git@4e77404#egg=event_dispatcher
-git+git://github.com/lcdr/bitstream.git@b3389c8#egg=bitstream
-git+git://github.com/lcdr/pyraknet.git@259b305#egg=pyraknet
-git+git://github.com/snguyenthanh/better_profanity.git@e352465#egg=better_profanity
