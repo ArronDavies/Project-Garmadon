@@ -17,12 +17,12 @@ You will need Python 3.6 or greater you can find that [here](https://www.python.
 
 You can find a list of available clients [here](https://docs.google.com/document/d/1XmHXWuUQqzUIOcv6SVVjaNBm4bFg9lnW4Pk1pllimEg), it is recommended you download lcdr's unpacked client. But if you already have a client and don't want to download a new one it is likely that it is packed so you need to unpack it using lcdr's utlis [here](https://bitbucket.org/lcdr/utils).
 
-These prerequisites can be found in the requirements.txt and are meant to be installed by pip.
+These prerequisites are needed so that the server can run and are installed when running start.py
 
 [bcrypt](https://pypi.org/project/bcrypt/), [requests](https://pypi.org/project/requests/), [event_dispatcher](https://github.com/lcdr/py_event_dispatcher), [bitstream](https://github.com/lcdr/bitstream), [pyraknet](https://github.com/lcdr/pyraknet), [better_profanity](https://pypi.org/project/better-profanity/).
 
 ## Config
-Currrently configuration is a mess, first you need to run Utils/GenerateConfig.py and that will generate config.ini then copy the maps folder inside of your unpacked client into the clientfiles folder.
+Currrently configuration is a quite easy all you need to do is run Start.py and it will generate the SQL table and the config file then copy the maps folder in a unpacked client to the clientfiles folder in the project folder
 
 ## Extra
 This server is not meant to be hosted publicly as it is missing many features that LEGO requires a public server to have you can find a list of requirements [here](https://mega.nz/file/Jt1S1SYB#8wC8Ubqq8yQ4-4tVR1y7VrZEkCAUZuaNKjjeZQ6dhe8)
