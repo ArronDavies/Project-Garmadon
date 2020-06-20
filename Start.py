@@ -30,7 +30,8 @@ try:
 	from CLI import CLI
 	from CharacterServer.Character import Character
 	from ZoneServer.Zone import Zone
-	from APIServer.api import API
+	from APIServer.api import flaskThread
+	from APIServer import app
 except:
 	install()
 
@@ -67,11 +68,14 @@ if __name__ == "__main__":
 				print("Ports are occupied")
 				exit()
 
-	interpreterpath = os.path.dirname(os.path.realpath(sys.executable)) + "/python.exe"
-	subprocess.call('start ' + interpreterpath + " APIServer/api.py", shell=False)
+	# interpreterpath = os.path.dirname(os.path.realpath(sys.executable)) + "/python.exe"
+	# api = subprocess.call('start ' + interpreterpath + " APIServer/api.py", shell=False)
 
 	cli = threading.Thread(target=CLI, args=(world_dict,))
 	cli.start()
+
+	API = threading.Thread(target=flaskThread)
+	API.start()
 
 	loop = asyncio.get_event_loop()
 	loop.run_forever()

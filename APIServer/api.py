@@ -8,7 +8,7 @@ config = configparser.ConfigParser()
 path = str(get_project_root()) + '/config.ini'
 config.read(path)
 
-class API():
-	ctypes.windll.kernel32.SetConsoleTitleW("APIServer")
+def flaskThread():
 	log(LOGGINGLEVEL.WEBSERVER, (" Server Started"))
-	app.run(config['API']['IP'], int(config['API']['PORT']), use_reloader=False)
+	app.debug = False
+	app.run(config['API']['IP'], int(config['API']['PORT']))

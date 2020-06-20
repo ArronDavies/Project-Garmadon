@@ -3,9 +3,8 @@ from Utils.GetProjectRoot import get_project_root
 import bcrypt
 import os
 
+
 # This is more database management stuff
-
-
 
 def createAccount(Username, Email, Password):  # Template insert ("Encry", "fake@fake.com", "password")
 	if (getAccountFromUsername(Username)):
@@ -48,12 +47,11 @@ def getAccountFromUsername(Username):  # Template insert ("Player")
 
 			jsonData = {"ID": id, "Username": Username, "Email": Email, "Password": Password, "SessionKey": SessionKey,
 						"FirstLogin": FirstLogin,
-						"Banned": Banned, "Admin": Admin, "CurrentCharacterID": CurrentCharacterID}
+						"Banned": Banned, "Admin": Admin, "CurrentCharacterID": CurrentCharacterID, "Status": "Success"}
 			return jsonData
 		cursor.close()
 	except:
 		return {"Status": "Fail", "Reason": "Account doesn't exist"}
-
 
 
 def getAccountFromID(ID):  # Template insert (1)
@@ -76,7 +74,7 @@ def getAccountFromID(ID):  # Template insert (1)
 
 			jsonData = {"ID": id, "Username": Username, "Email": Email, "Password": Password, "SessionKey": SessionKey,
 						"FirstLogin": FirstLogin,
-						"Banned": Banned, "Admin": Admin, "CurrentCharacterID": CurrentCharacterID}
+						"Banned": Banned, "Admin": Admin, "CurrentCharacterID": CurrentCharacterID, "Status": "Success"}
 			return jsonData
 		cursor.close()
 	except:
@@ -122,6 +120,7 @@ def getSpecificAccountData(Username, value):  # Template insert ("Player", "id")
 			if switchcase(value) == "Error":
 				return {"Status": "Fail", "Reason": "Data unreachable"}
 			else:
-				return {"Username": Username, switchcase2(switchcase(value)): row[switchcase(value)]}
+				return {"Username": Username, switchcase2(switchcase(value)): row[switchcase(value)],
+						"Status": "Success"}
 	else:
 		return {"Status": "Fail", "Reason": "Account doesn't exist"}
