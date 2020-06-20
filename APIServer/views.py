@@ -5,8 +5,8 @@ from Logger import *
 import logging
 import json
 
-# logging.getLogger('werkzeug').disabled = True
-# os.environ['WERKZEUG_RUN_MAIN'] = 'true'
+logging.getLogger('werkzeug').disabled = True
+os.environ['WERKZEUG_RUN_MAIN'] = 'true'
 
 @app.route('/')
 def index():
