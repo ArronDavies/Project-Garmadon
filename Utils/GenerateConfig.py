@@ -24,4 +24,8 @@ def write():
 	f.write("\n[LOGGING]")
 	f.write("\nLogOutput = True")
 	f.write("\n")
+	f.write("\n[API]")
+	f.write("\nIP = 127.0.0.1")
+	f.write("\nPort = 8080")
+	f.write("\n")
 	f.close()

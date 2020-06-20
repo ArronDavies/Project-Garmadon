@@ -34,6 +34,8 @@ def log(logginglevel, message, packet=""):
 
 def logmanage():
 	if os.path.exists("Logs"):
+		if os.path.exists("Logs/Garmadon.log"):
+			os.remove("Logs/Garmadon.log")
 		dir = (str(Path.cwd()) + '\\Logs')
 		if (len([name for name in os.listdir(dir) if os.path.isfile(os.path.join(dir, name))])) > 19:
 			try:
@@ -80,7 +82,7 @@ class LOGGINGLEVEL:
 	try:
 		ppid = os.getppid()  # Find parent process pid
 		value = psutil.Process(ppid).name()  # Get exe name of that process
-	except:  # Just so that using this on Linux and Mac don't break it
+	except:  # Just so that using this on Linux and Mac doesn't break it
 		value = "noansi"
 	if value == "cmd.exe":
 		WARNING = '[WARNING]'
@@ -96,6 +98,7 @@ class LOGGINGLEVEL:
 		WORLD = '[WORLD]'
 		REPLICA = '[REPLICA]'
 		CHARACTER = '[CHARACTER]'
+		WEBSERVER = '[WEBSERVER]'
 
 		GAMEMESSAGE = '[GAMEMESSAGE]'
 		PACKET = ''
@@ -115,6 +118,7 @@ class LOGGINGLEVEL:
 		WORLD = '[WORLD]'
 		REPLICA = '[REPLICA]'
 		CHARACTER = '[CHARACTER]'
+		WEBSERVER = '[WEBSERVER]'
 
 		GAMEMESSAGE = '[GAMEMESSAGE]'
 		PACKET = ''
@@ -134,12 +138,33 @@ class LOGGINGLEVEL:
 		WORLD = '[WORLD]'
 		REPLICA = '[REPLICA]'
 		CHARACTER = '[CHARACTER]'
+		WEBSERVER = '[WEBSERVER]'
 
 		GAMEMESSAGE = '[GAMEMESSAGE]'
 		PACKET = ''
 		MESSAGE = ''
 		INFO = '[INFO]'
-	else:  # If not cmd or powershell use ANSI
+	elif value == "python.exe":  # If not cmd or powershell use ANSI
+		WARNING = '[WARNING]'
+		ERROR = '[ERROR]'
+		DEBUG = '[DEBUG]'
+		AUTHDEBUG = '[DEBUG][AUTH]'
+		WORLDDEBUG = '[DEBUG][WORLD]'
+		WORLDDEBUGROUTE = '[WORLD][ROUTE]'
+		REPLICADEBUG = '[DEBUG][REPLICA]'
+		CHARACTERDEBUG = '[DEBUG][CHARACTER]'
+
+		AUTH = '[AUTH]'
+		WORLD = '[WORLD]'
+		REPLICA = '[REPLICA]'
+		CHARACTER = '[CHARACTER]'
+		WEBSERVER = '[WEBSERVER]'
+
+		GAMEMESSAGE = '[GAMEMESSAGE]'
+		PACKET = ''
+		MESSAGE = ''
+		INFO = '[INFO]'
+	else:
 		WARNING = '\u001b[33m[WARNING]'
 		ERROR = '\u001b[31m[ERROR]'
 		DEBUG = '\u001b[34m[DEBUG]'
@@ -153,6 +178,7 @@ class LOGGINGLEVEL:
 		WORLD = '\u001b[34m[WORLD]'
 		REPLICA = '\u001b[34m[REPLICA]'
 		CHARACTER = '\u001b[30m[CHARACTER]'
+		WEBSERVER = '\u001b[34m[WEBSERVER]'
 
 		GAMEMESSAGE = '\u001b[36m[GAMEMESSAGE]'
 		PACKET = '\u001b[37m'

@@ -93,6 +93,4 @@ create table if not exists "Inventory"
 		constraint Inventory_pk
 			primary key
 );
-create unique index Inventory_ItemID_uindex
-	on Inventory (ItemID);
 commit;

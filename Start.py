@@ -3,6 +3,10 @@ import configparser
 import threading
 import os
 import Utils.model
+import sys
+from Utils.GetProjectRoot import get_project_root
+import subprocess
+
 from pathlib import Path
 
 if os.path.exists("Garmadon.sqlite"):
@@ -10,18 +14,14 @@ if os.path.exists("Garmadon.sqlite"):
 		pass
 else:
 	Utils.model.main()
-
-
 def install():
 	os.system('cmd /c "pip install -r requirements.txt"')
-
 try:
 	import Logger
 except:
 	print("No config has been generated")
 	print("Generating now")
 	import Utils.GenerateConfig
-
 	Utils.GenerateConfig.write()
 finally:
 	import Logger
@@ -30,6 +30,8 @@ try:
 	from CLI import CLI
 	from CharacterServer.Character import Character
 	from ZoneServer.Zone import Zone
+	from APIServer.api import flaskThread
+	from APIServer import app
 except:
 	install()
 
@@ -66,8 +68,14 @@ if __name__ == "__main__":
 				print("Ports are occupied")
 				exit()
 
+	# interpreterpath = os.path.dirname(os.path.realpath(sys.executable)) + "/python.exe"
+	# api = subprocess.call('start ' + interpreterpath + " APIServer/api.py", shell=False)
+
 	cli = threading.Thread(target=CLI, args=(world_dict,))
 	cli.start()
+
+	API = threading.Thread(target=flaskThread)
+	API.start()
 
 	loop = asyncio.get_event_loop()
 	loop.run_forever()

@@ -98,6 +98,5 @@ class CLI:
 		else:
 			print("There are no current logs")
 
-
 	#def systemmessage(self, args):
 	#	Zone.sendmessage(args[1])
