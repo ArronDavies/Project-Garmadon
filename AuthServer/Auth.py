@@ -8,7 +8,6 @@ from pyraknet.messages import *
 from bitstream import *
 from Logger import *
 
-
 class Auth(Server):
 	def __init__(self, bind_ip, port, max_connections, incoming_password, ssl):
 		super().__init__(address=(bind_ip, port), max_connections=int(max_connections),

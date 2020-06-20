@@ -1,5 +1,5 @@
 from typing import Iterable
-
+import asyncio
 import Packets.Incoming
 import Packets.Outgoing
 from uuid import uuid3, NAMESPACE_DNS
@@ -14,6 +14,7 @@ from pyraknet.transports.raknet.connection import RaknetConnection
 from pyraknet.server import Server
 from pyraknet.messages import Message
 from bitstream import *
+import os
 
 
 class Replica(Replica):
