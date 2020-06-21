@@ -6,7 +6,7 @@ This project is not intended for main stream use it is more of a test server tha
 > The LEGO Group has not endorsed or authorized the operation of this game and is not liable for any safety issues in relation to its operation.
 
 ## About
-This project is very much still in development and there is no working parts from a game play perspective and no one working on this project and or anyone in the LU community are required to give anyone support as this is a piece of server software not meant for widespread use.
+This project is very much still in development and there is no working parts from a game play perspective and no one working on this project and or anyone in the LU community are required to give anyone support as this is a piece of server software not meant for widespread use. 
 
 ## Contributing 
 Any issues that are reported are greatly appreciated and if you think you can do something better than us feel free to open a pull request.
