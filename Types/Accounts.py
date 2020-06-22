@@ -8,7 +8,7 @@ import os
 
 def createAccount(Username, Email, Password):  # Template insert ("Encry", "fake@fake.com", "password")
 	if (getAccountFromUsername(Username)):
-		return {"Status": "Fail", "Reason": "Account already exists"}
+		return '{"Status": "Fail", "Reason": "Account already exists"}'
 	else:
 		try:
 			db = sqlite3.connect(str(get_project_root()) + "/Garmadon.sqlite")
@@ -22,9 +22,9 @@ def createAccount(Username, Email, Password):  # Template insert ("Encry", "fake
 			dbcmd.execute(query, (Username, Email, hashedPassword, "", "1", "0", "1", "1"))
 			db.commit()
 			dbcmd.close()
-			return {"Status": "Success"}
+			return '{"Status": "Success"}'
 		except:
-			return {"Status": "Fail", "Reason": "Unknown"}
+			return '{"Status": "Fail", "Reason": "Unknown"}'
 
 
 def getAccountFromUsername(Username):  # Template insert ("Player")
@@ -45,13 +45,13 @@ def getAccountFromUsername(Username):  # Template insert ("Player")
 			Admin = row[7]
 			CurrentCharacterID = row[8]
 
-			jsonData = {"ID": id, "Username": Username, "Email": Email, "Password": Password, "SessionKey": SessionKey,
+			jsonData = '''{"ID": id, "Username": Username, "Email": Email, "Password": Password, "SessionKey": SessionKey,
 						"FirstLogin": FirstLogin,
-						"Banned": Banned, "Admin": Admin, "CurrentCharacterID": CurrentCharacterID, "Status": "Success"}
+						"Banned": Banned, "Admin": Admin, "CurrentCharacterID": CurrentCharacterID, "Status": "Success"}'''
 			return jsonData
 		cursor.close()
 	except:
-		return {"Status": "Fail", "Reason": "Account doesn't exist"}
+		return '{"Status": "Fail", "Reason": "Account doesn\'t exist"}'
 
 
 def getAccountFromID(ID):  # Template insert (1)
@@ -72,13 +72,13 @@ def getAccountFromID(ID):  # Template insert (1)
 			Admin = row[7]
 			CurrentCharacterID = row[8]
 
-			jsonData = {"ID": id, "Username": Username, "Email": Email, "Password": Password, "SessionKey": SessionKey,
+			jsonData = '''{"ID": id, "Username": Username, "Email": Email, "Password": Password, "SessionKey": SessionKey,
 						"FirstLogin": FirstLogin,
-						"Banned": Banned, "Admin": Admin, "CurrentCharacterID": CurrentCharacterID, "Status": "Success"}
+						"Banned": Banned, "Admin": Admin, "CurrentCharacterID": CurrentCharacterID, "Status": "Success"}'''
 			return jsonData
 		cursor.close()
 	except:
-		return {"Status": "Fail", "Reason": "Account doesn't exist"}
+		return '{"Status": "Fail", "Reason": "Account doesn\'t exist"}'
 
 
 def getSpecificAccountData(Username, value):  # Template insert ("Player", "id")
@@ -118,9 +118,9 @@ def getSpecificAccountData(Username, value):  # Template insert ("Player", "id")
 		data = cursor.fetchall()
 		for row in data:
 			if switchcase(value) == "Error":
-				return {"Status": "Fail", "Reason": "Data unreachable"}
+				return '{"Status": "Fail", "Reason": "Data unreachable"}'
 			else:
-				return {"Username": Username, switchcase2(switchcase(value)): row[switchcase(value)],
-						"Status": "Success"}
+				return '''{"Username": Username, switchcase2(switchcase(value)): row[switchcase(value)],
+						"Status": "Success"}'''
 	else:
-		return {"Status": "Fail", "Reason": "Account doesn't exist"}
+		return '{"Status": "Fail", "Reason": "Account doesn\'t exist"}'

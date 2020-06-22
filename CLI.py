@@ -2,6 +2,8 @@ import argparse
 import os
 from Logger import *
 from Packets.Outgoing import *
+from Types.Accounts import *
+import json
 
 class CLI:
 	def __init__(self, world_dict):
@@ -14,6 +16,7 @@ class CLI:
 
 		self.commands['/logs'] = self.logs
 		self.commands['/chatlogs'] = self.chatlogs
+		self.commands['/accountcreate'] = self.accountcreate
 		#self.commands['/systemmessage'] = self.systemmessage
 
 		self.main()
@@ -34,6 +37,7 @@ class CLI:
 		print("/fly <name>")
 		print("/logs")
 		print("/chatlogs")
+		print("/accountcreate <username> <email> <password>")
 		#print("/systemmessage <message>")
 
 
@@ -100,3 +104,10 @@ class CLI:
 
 	#def systemmessage(self, args):
 	#	Zone.sendmessage(args[1])
+
+	def accountcreate(self, args):
+		data = (json.loads(createAccount(args[1], args[2], args[3])))
+		if data["Status"] == "Fail":
+			log(LOGGINGLEVEL.CLI, (" Account create failed for reason ({})").format(data["Reason"]))
+		else:
+			log(LOGGINGLEVEL.CLI, (" Account created ({}, {}, {})").format(args[1], args[2], args[3]))
