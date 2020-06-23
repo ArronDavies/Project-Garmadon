@@ -10,11 +10,8 @@ def LOGIN_REQUEST(stream, conn, server):
 	uid = str(uuid3(NAMESPACE_DNS, str(address)))
 	session = server.get_session(uid)
 
-	username = stream.read(str, allocated_length=33)
-	password = stream.read(str, allocated_length=41)
-
-	session.temp_username = username
-	session.temp_password = password
+	session.temp_username = username = stream.read(str, allocated_length=33)
+	session.temp_password = password = stream.read(str, allocated_length=41)
 
 	# This is just data about the client that is connecting
 

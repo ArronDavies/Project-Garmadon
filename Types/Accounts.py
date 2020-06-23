@@ -19,7 +19,7 @@ def createAccount(Username, Email, Password):  # Template insert ("Encry", "fake
 			hashedPassword = bcrypt.hashpw(temp, bcrypt.gensalt())
 
 			query = "INSERT INTO Accounts (Username, Email, Password, SessionKey, FirstLogin, Banned, Admin, CurrentCharacterID) VALUES (?,?,?,?,?,?,?,?)"
-			dbcmd.execute(query, (Username, Email, hashedPassword, "", "1", "0", "1", "1"))
+			dbcmd.execute(query, (Username, Email, hashedPassword, None, "1", "0", "1", "1"))
 			db.commit()
 			dbcmd.close()
 			return '{"Status": "Success"}'

@@ -25,12 +25,9 @@ def log(logginglevel, message, packet=""):
 	else:
 		print(u"" + logginglevel + LOGGINGLEVEL.PACKET + packet + LOGGINGLEVEL.MESSAGE + message)
 
-	if logging_info['LogOutput'] == "True":
-		logging.basicConfig(level=logging.INFO, filename='Garmadon.log')
-		logging.debug("" + LOGGINGLEVEL.PACKET + packet + LOGGINGLEVEL.MESSAGE + message)
-	else:
-		pass
-
+	f = open('Garmadon.log', 'a')
+	f.write(logginglevel[5:] + message + "\n")
+	f.close()
 
 def logmanage():
 	if os.path.exists("Logs"):

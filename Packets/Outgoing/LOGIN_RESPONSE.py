@@ -17,8 +17,7 @@ def LOGIN_RESPONSE(stream, conn, server):
 	session.sync_account_values_down()
 
 	if session.username is not None:  # Username exists
-		if bcrypt.checkpw(str(session.temp_password).encode('utf-8'),
-						  str(session.password).encode('utf-8')):  # Password is correct
+		if bcrypt.checkpw(str(session.temp_password).encode('utf-8'), session.password):  # Password is correct
 			if session.is_banned == 0:  # Not banned
 				returncode = 0x01  # Success
 				session.set_session_key(str(uuid4())[0:20])
@@ -40,21 +39,19 @@ def LOGIN_RESPONSE(stream, conn, server):
 	response.write(c_ushort(64))
 	response.write(session.session_key, allocated_length=33)
 
-	response.write(bytes(char_server_details['Host'], 'latin1'),
-				   allocated_length=33)  # Char IP  TODO: Read this from a config file
+	response.write(bytes(char_server_details['Host'], 'latin1'), allocated_length=33)  # Char IP  TODO: Read this from a config file
 	response.write(bytes('0.0.0.0', 'latin1'), allocated_length=33)  # Chat IP UNUSED
 	response.write(c_ushort(int(char_server_details['Port'])))  # char Port
 	response.write(c_ushort(0000))  # chat port UNUSED
 	response.write(bytes("0", 'latin1'), allocated_length=33)  # Unknown data string maybe fallback server?
-	response.write(bytes("00000000-0000-0000-0000-000000000000", 'latin1'),
-				   allocated_length=37)  # Unknown, global unique id
+	response.write(bytes("00000000-0000-0000-0000-000000000000", 'latin1'), allocated_length=37)  # Unknown, global unique id
 	response.write(c_ulong(0))  # Unknown, always 0?
 	response.write(bytes("US", 'latin1'), allocated_length=3)  # Localisation, currently only US and IT
 	response.write(c_bool(session.first_login))  # First time logging in with subscription? Yes for us
 	response.write(c_bool(False))  # Is FTP?
 	response.write(c_ulonglong(0))  # Unknown data, always 0?
 
-	response.write("Project Garmadon Error", length_type=c_ushort)  # Custom error message
+	response.write("Pika-Chew :D", length_type=c_ushort)  # Custom error message
 	response.write(c_ushort(0))
 	response.write(c_ulong(4))
 	conn.send(response, reliability=Reliability.Reliable)
