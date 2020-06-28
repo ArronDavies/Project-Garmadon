@@ -14,8 +14,7 @@ if os.path.exists("Garmadon.sqlite"):
 		pass
 else:
 	Utils.model.main()
-def install():
-	os.system('cmd /c "pip install -r requirements.txt"')
+	
 try:
 	import Logger
 except:
@@ -25,15 +24,12 @@ except:
 	Utils.GenerateConfig.write()
 finally:
 	import Logger
-try:
-	from AuthServer.Auth import Auth
-	from CLI import CLI
-	from CharacterServer.Character import Character
-	from ZoneServer.Zone import Zone
-	from APIServer.api import flaskThread
-	from APIServer import app
-except:
-	install()
+from AuthServer.Auth import Auth
+from CLI import CLI
+from CharacterServer.Character import Character
+from ZoneServer.Zone import Zone
+from APIServer.api import flaskThread
+from APIServer import app
 
 if __name__ == "__main__":
 	config = configparser.ConfigParser()
