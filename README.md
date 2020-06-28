@@ -2,6 +2,8 @@
 A Lego Universe server written in Pyhton using lcdr's PyRakNet
 This project is not intended for main stream use it is more of a test server that is intended to be reliable.
 
+This version of the server is the last until the rewrite is at the same point.
+
 ## Disclaimer
 > The LEGO Group has not endorsed or authorized the operation of this game and is not liable for any safety issues in relation to its operation.
 
