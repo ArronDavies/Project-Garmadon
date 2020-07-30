@@ -44,7 +44,6 @@ create table if not exists "Accounts"
 	Banned boolean default False,
 	Admin boolean default False
 , CurrentCharacterID int);
-insert into Accounts values(1,'Player','123','$2b$12$SozEPlkWaivFhBIeZGiMMuP2hqY1Zd8vOBoOpG50vUfVFze6FBNxW','',1,0,1,1);
 create table if not exists "Characters"
 (
 	CharID integer
