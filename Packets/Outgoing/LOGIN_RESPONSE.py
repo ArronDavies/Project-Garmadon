@@ -17,7 +17,7 @@ def LOGIN_RESPONSE(stream, conn, server):
 	session.sync_account_values_down()
 
 	if session.username is not None:  # Username exists
-		if bcrypt.checkpw(str(session.temp_password).encode('utf-8'), session.password):  # Password is correct
+		if bcrypt.checkpw(str(session.temp_password).encode('utf-8'), session.password.encode('utf-8')):  # Password is correct
 			if session.is_banned == 0:  # Not banned
 				returncode = 0x01  # Success
 				session.set_session_key(str(uuid4())[0:20])
