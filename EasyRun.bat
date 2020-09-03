@@ -1,1 +1,0 @@
-start cmd.exe /k "python ".\Auth\AuthServer.py""
