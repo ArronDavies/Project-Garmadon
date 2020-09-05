@@ -13,19 +13,21 @@ namespace Garmadon {
 #else
 		enum class Color { White = 37, Red = 31, Blue = 34, Green = 32, Cyan = 36, Purple = 35 };
 #endif
+		bool LogToConsole = false;
 
 		void log(const std::string& server, const std::string& message, Color LogType = Color::White) {
+			if (LogToConsole) {
 #if defined(_WIN32) || defined(_WIN64)
-			HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-			int k;
+				HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
-			if (LogType != Color::White) {
-				SetConsoleTextAttribute(hConsole, (int)LogType);
-			}
-			std::cout << "[" << server.c_str() << "] " << message.c_str() << " \n";
+				if (LogType != Color::White) {
+					SetConsoleTextAttribute(hConsole, (int)LogType);
+				}
+				std::cout << "[" << server.c_str() << "] " << message.c_str() << " \n";
 #else
-			std::cout << "\033[1;" << std::to_string((int)LogType) << "m[" << server.c_str() << "] " << message.c_str() << " \n";
+				std::cout << "\033[1;" << std::to_string((int)LogType) << "m[" << server.c_str() << "] " << message.c_str() << " \n";
 #endif
+			}
 		}
 	}
 }

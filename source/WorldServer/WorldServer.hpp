@@ -6,7 +6,7 @@
 #include "../../libs/RakNet/MessageIdentifiers.h"
 #include "../../libs/RakNet/BitStream.h"
 
-#include "../Utils/PacketUtils.hpp"
+#include "../Utils/Packets.hpp"
 #include "../Logger.hpp"
 
 #define byte uint8_t
@@ -14,7 +14,7 @@
 namespace Garmadon {
 	class World {
 	private:
-		RakPeerInterface* RakServer;
+		uint32_t MaxConnections
 
 
 	public:
@@ -24,24 +24,29 @@ namespace Garmadon {
 
 		bool IsCharacterServer = false;
 
+		void SetMaxConnections(uint16_t _MaxConnections) {
+			MaxConnections = _MaxConnections;
+		}
+
 		World(int _port, int _WorldID) : port(_port), WorldID(_WorldID) {
 			if (WorldID == 0) {
 				IsCharacterServer = true;
 			}
 
-			RakServer = RakNetworkFactory::GetRakPeerInterface();
+			RakPeerInterface* RakServer = RakNetworkFactory::GetRakPeerInterface();
 
 			RakServer->SetIncomingPassword("3.25 ND1", 8);
 
-			SocketDescriptor socket(port, 0);
+			SocketDescriptor socket(1001, nullptr); // Empty IP string = INADDR_ANY
 
-			Logger::log("Auth", "Starting up Auth Server");
+			Logger::log("World", "Starting up World Server");
 
-			// TODO: Set max connections to world specific number
-			bool AuthStarted = RakServer->Startup(32, 16, &socket, 1); // Thread sleep time is 16 (That is what live used)
+			bool WorldStarted = RakServer->Startup(MaxConnections, 16, &socket, 1); // Thread sleep time is 16 (That is what live used)
 
-			if (!AuthStarted) {
-				Logger::log("World", "Startup failed");
+			RakServer->SetMaximumIncomingConnections(MaxConnections);
+
+			if (!WorldStarted) {
+				Logger::log("Auth", "Startup failed");
 
 				exit(1);
 			}
@@ -49,33 +54,42 @@ namespace Garmadon {
 			Packet* currentPacket;
 
 			while (true) {
+				RakSleep(16);
 				while (currentPacket = RakServer->Receive()) {
 					RakNet::BitStream bs(currentPacket->data, currentPacket->length, false);
 
-					PacketUtils::PacketHeader header(&bs);
+					Packets::PacketHeader header = *reinterpret_cast<Packets::PacketHeader*>(currentPacket->data);
 
 					switch (header.RemotePacketID) {
 					case ID_USER_PACKET_ENUM: {
 						printf("[World] Recieved Packet %02x-%02x-00-%02x \n", header.RemotePacketID, header.RemoteConnectionType, header.PacketID);
 						switch (header.RemoteConnectionType) {
-						
+						case 00: {
+							uint32_t game_version; bs.Read<uint32_t>(game_version);
+							uint32_t unknown; bs.Read<uint32_t>(unknown);
+							uint32_t remote_connection_type; bs.Read<uint32_t>(remote_connection_type);
+							uint32_t process_id; bs.Read<uint32_t>(process_id);
+							uint16_t local_port; bs.Read<uint16_t>(local_port);
+						} break;
+						case 01: {
+							// Login response
+						} break;
 						}
 					} break;
 					case ID_NEW_INCOMING_CONNECTION: {
-						Logger::log("World", "Recieving new Connection");
+						Logger::log("World", "User connected to auth");
 					} break;
 					case ID_DISCONNECTION_NOTIFICATION: {
-						Logger::log("World", "User Disconnected from World");
+						Logger::log("World", "User disconnected from auth");
 					} break;
 					}
 				}
 
-				RakSleep(1);
+				RakServer->DeallocatePacket(currentPacket);
 			}
 
-			RakServer->Shutdown(-1);
+			RakServer->Shutdown(0);
 			RakNetworkFactory::DestroyRakPeerInterface(RakServer);
-
 		}
 	};
 }

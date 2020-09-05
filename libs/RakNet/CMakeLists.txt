@@ -192,5 +192,7 @@ set(RAKNET_SRC
 		Types.h
 )
 
+message("-- Working on RakNet CMake")
+
 add_library(RakNet STATIC ${RAKNET_SRC})
 target_link_libraries(RakNet ws2_32)
