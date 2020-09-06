@@ -70,9 +70,8 @@ namespace Garmadon {
 			}
 		}
 
-		bool CheckLogin(std::string PreUsername, std::string PrePassword) {
-			std::string username = std::move(PreUsername);
-			std::string sql = "SELECT * FROM Accounts WHERE Username='" + username + "';";
+		bool CheckLogin(std::u16string Username, std::u16string Password) {
+			std::string sql = "SELECT * FROM Accounts WHERE Username='" + std::string(Username.begin(), Username.end()) + "';";
 
 			int result;
 			char* error;
@@ -84,11 +83,10 @@ namespace Garmadon {
 			}
 			else {
 				std::string SQLresult = SearchForVar(CurrentData, "password");
-				if (std::move(PrePassword) == SQLresult) { return true; }
+				if (std::string(Password.begin(), Password.end()) == SQLresult) { return true; }
 				else { return false; }
 			}
 			return false;
 		}
-
 	}
 }

@@ -7,8 +7,10 @@
 #include "../../libs/RakNet/BitStream.h"
 
 #include "../Utils/Packets.hpp"
+#include "../Utils/Strings.hpp"
 #include "../Logger.hpp"
 #include "../Packets/AuthPackets.hpp"
+#include "../Database/Database.hpp"
 
 namespace Garmadon {
 	class Auth {
@@ -62,7 +64,12 @@ namespace Garmadon {
 							AuthPackets::HandshakeWithClient(game_version, RakServer, currentPacket->systemAddress);
 						} break;
 						case 01: {
-							// Login response
+							std::u16string username = Strings::WStringFromBitStream(&bs);
+							std::u16string password = Strings::WStringFromBitStream(&bs, 41);
+
+							if (Database::CheckLogin(username, password)) {
+								AuthPackets::LoginResponse(LoginEnum::SUCCESS, RakServer, currentPacket->systemAddress);
+							}
 						} break;
 						}
 					} break;

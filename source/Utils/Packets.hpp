@@ -2,6 +2,8 @@
 
 #include "../../libs/RakNet/BitStream.h"
 
+#include <fstream>
+
 typedef uint8_t byte;
 
 namespace Garmadon {
@@ -18,6 +20,17 @@ namespace Garmadon {
 			bs->Write<uint16_t>(rct);
 			bs->Write<uint32_t>(ipid);
 			bs->Write<uint8_t>(0x00);
+		}
+
+		void WriteToBin(RakNet::BitStream* bs, std::string filename) {
+			std::string path = "Packets/" + filename;
+
+			std::ofstream file(path, std::ios::binary);
+
+			if (!file.is_open()) throw std::exception("File not open?");
+
+			file.write((char*)bs->GetData(), bs->GetNumberOfBytesUsed());
+			file.close();
 		}
 	}
 }

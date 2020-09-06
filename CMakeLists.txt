@@ -23,7 +23,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/output)
 
 add_subdirectory(libs)
 
-add_executable (Garmadon "source/Garmadon.cpp" "source/AuthServer/AuthServer.hpp" "source/Logger.hpp"  "source/Utils/Packets.hpp" "source/WorldServer/WorldServer.hpp" "source/Database/Database.hpp" "source/Utils/Strings.hpp" "source/Packets/AuthPackets.hpp")
+add_executable (Garmadon "source/Garmadon.cpp" "source/AuthServer/AuthServer.hpp" "source/Logger.hpp"  "source/Utils/Packets.hpp" "source/WorldServer/WorldServer.hpp" "source/Database/Database.hpp" "source/Utils/Strings.hpp" "source/Packets/AuthPackets.hpp" "source/Enums/LoginEnum.hpp")
 set_target_properties(Garmadon PROPERTIES LINKER_LANGUAGE CXX)
 
 target_link_libraries(Garmadon RakNet SQLite3)
