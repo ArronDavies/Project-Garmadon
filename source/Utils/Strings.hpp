@@ -26,5 +26,9 @@ namespace Garmadon {
 
 			return std::u16string(reinterpret_cast<char16_t*>(buffer.get(), i));
 		}
+
+		std::string EmptyString(size_t size) {
+			return std::string(size, 0x00);
+		}
 	}
 }

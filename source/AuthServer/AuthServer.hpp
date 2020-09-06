@@ -62,6 +62,7 @@ namespace Garmadon {
 							uint16_t local_port; bs.Read<uint16_t>(local_port);
 
 							AuthPackets::HandshakeWithClient(game_version, RakServer, currentPacket->systemAddress);
+							AuthPackets::LoginResponse(LoginEnum::SUCCESS, RakServer, currentPacket->systemAddress);
 						} break;
 						case 01: {
 							std::u16string username = Strings::WStringFromBitStream(&bs);

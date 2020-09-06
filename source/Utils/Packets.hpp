@@ -3,6 +3,7 @@
 #include "../../libs/RakNet/BitStream.h"
 
 #include <fstream>
+#include <filesystem>
 
 typedef uint8_t byte;
 
@@ -23,6 +24,8 @@ namespace Garmadon {
 		}
 
 		void WriteToBin(RakNet::BitStream* bs, std::string filename) {
+			if (!std::filesystem::exists("Packets")) std::filesystem::create_directory("Packets");
+
 			std::string path = "Packets/" + filename;
 
 			std::ofstream file(path, std::ios::binary);
